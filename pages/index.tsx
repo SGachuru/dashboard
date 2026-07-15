@@ -84,18 +84,18 @@ const HomePage: NextPage = () => {
 
         {highlights.map((item) => (
           <Grid item xs={12} md={4} key={item.title}>
-            <Card sx={{ borderRadius: 4, height: '100%' }}>
-              <CardContent>
-                <Chip label="Ready" color="primary" size="small" sx={{ mb: 1.5 }} />
-                <Typography variant="h6" fontWeight={700}>{item.title}</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
-                  {item.description}
-                </Typography>
-                <Button component={Link} href={item.href} variant="outlined">
-                  Open section
-                </Button>
-              </CardContent>
-            </Card>
+            <Box component={Link} href={item.href} sx={{ textDecoration: 'none' }}>
+              <Card sx={{ borderRadius: 4, height: '100%', '&:hover': { boxShadow: 6, cursor: 'pointer' } }}>
+                <CardContent>
+                  <Chip label="Ready" color="primary" size="small" sx={{ mb: 1.5 }} />
+                  <Typography variant="h6" fontWeight={700}>{item.title}</Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
+                    {item.description}
+                  </Typography>
+                  <Button variant="outlined">Open section</Button>
+                </CardContent>
+              </Card>
+            </Box>
           </Grid>
         ))}
       </Grid>

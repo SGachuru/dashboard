@@ -249,19 +249,26 @@ export default function PortalShell({
                 <>
                   <Stack spacing={1} sx={{ mt: 2 }}>
                     {visibleMenuItems.map((item, index) => (
-                      <Button
+                      <Box
                         key={`${item.href}-${index}`}
                         component={Link}
                         href={item.href}
-                        variant={active === item.label ? 'contained' : 'text'}
-                        color={active === item.label ? 'primary' : 'inherit'}
-                        size="small"
-                        fullWidth
-                        sx={{ justifyContent: 'flex-start', borderRadius: 2, px: 1.5, py: 1, color: active === item.label ? '#fff' : '#c9d1d9', bgcolor: active === item.label ? '#1f6feb' : 'transparent', '&:hover': { bgcolor: active === item.label ? '#1f6feb' : '#21262d' } }}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          px: 1.5,
+                          py: 1,
+                          borderRadius: 2,
+                          textDecoration: 'none',
+                          color: active === item.label ? '#fff' : '#c9d1d9',
+                          bgcolor: active === item.label ? '#1f6feb' : 'transparent',
+                          '&:hover': { bgcolor: active === item.label ? '#1f6feb' : '#21262d', cursor: 'pointer' },
+                        }}
                       >
                         <Box component="span" sx={{ mr: 1 }}>{item.icon}</Box>
-                        {item.label}
-                      </Button>
+                        <Typography variant="body2" fontWeight={active === item.label ? 700 : 400}>{item.label}</Typography>
+                      </Box>
                     ))}
                   </Stack>
                   <Divider sx={{ my: 2.5, borderColor: '#30363d' }} />
@@ -273,17 +280,25 @@ export default function PortalShell({
               ) : (
                 <Stack spacing={1} sx={{ mt: 2 }}>
                   {menuItems.map((item, index) => (
-                    <Button
+                    <Box
                       key={`${item.href}-${index}`}
                       component={Link}
                       href={item.href}
-                      variant={active === item.label ? 'contained' : 'text'}
-                      color={active === item.label ? 'primary' : 'inherit'}
-                      size="small"
-                      sx={{ minWidth: 0, justifyContent: 'center', borderRadius: 2, px: 1.2, py: 1, color: active === item.label ? '#fff' : '#c9d1d9', bgcolor: active === item.label ? '#1f6feb' : 'transparent', '&:hover': { bgcolor: active === item.label ? '#1f6feb' : '#21262d' } }}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 2,
+                        px: 1.2,
+                        py: 1,
+                        textDecoration: 'none',
+                        color: active === item.label ? '#fff' : '#c9d1d9',
+                        bgcolor: active === item.label ? '#1f6feb' : 'transparent',
+                        '&:hover': { bgcolor: active === item.label ? '#1f6feb' : '#21262d', cursor: 'pointer' },
+                      }}
                     >
                       <Box component="span">{item.icon}</Box>
-                    </Button>
+                    </Box>
                   ))}
                 </Stack>
               )}
@@ -306,15 +321,17 @@ export default function PortalShell({
               </Paper>
 
               <Grid container spacing={2}>
-                {stats.map((stat) => (
+                {stats.map((stat, index) => (
                   <Grid item xs={12} sm={6} lg={3} key={stat.label}>
-                    <Card sx={{ borderRadius: 3, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-                      <CardContent>
-                        <Typography variant="body2" color="#8b949e">{stat.label}</Typography>
-                        <Typography variant="h5" fontWeight={800} color="#f0f6fc" sx={{ mt: 0.5 }}>{stat.value}</Typography>
-                        <Chip label={stat.trend} size="small" sx={{ mt: 1, bgcolor: '#1f6feb', color: '#fff' }} />
-                      </CardContent>
-                    </Card>
+                    <Box component={Link} href={`/${stat.label.toLowerCase().replace(/\s+/g, '-')}`} sx={{ textDecoration: 'none' }}>
+                      <Card sx={{ borderRadius: 3, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none', '&:hover': { borderColor: '#1f6feb', cursor: 'pointer' } }}>
+                        <CardContent>
+                          <Typography variant="body2" color="#8b949e">{stat.label}</Typography>
+                          <Typography variant="h5" fontWeight={800} color="#f0f6fc" sx={{ mt: 0.5 }}>{stat.value}</Typography>
+                          <Chip label={stat.trend} size="small" sx={{ mt: 1, bgcolor: '#1f6feb', color: '#fff' }} />
+                        </CardContent>
+                      </Card>
+                    </Box>
                   </Grid>
                 ))}
               </Grid>
@@ -329,10 +346,12 @@ export default function PortalShell({
                       </Stack>
                       <List disablePadding>
                         {tableRows.map((row) => (
-                          <ListItem key={row.name} disablePadding sx={{ py: 1.25 }}>
-                            <ListItemText primary={<Typography color="#f0f6fc">{row.name}</Typography>} secondary={<Typography color="#8b949e">{row.meta}</Typography>} />
-                            <Chip label={row.status} size="small" sx={{ bgcolor: row.status === 'Urgent' ? '#da3633' : '#30363d', color: '#fff' }} />
-                          </ListItem>
+                          <Box key={row.name} component={Link} href="/customer-dashboard" sx={{ textDecoration: 'none' }}>
+                            <ListItem disablePadding sx={{ py: 1.25, '&:hover': { bgcolor: '#21262d', cursor: 'pointer' } }}>
+                              <ListItemText primary={<Typography color="#f0f6fc">{row.name}</Typography>} secondary={<Typography color="#8b949e">{row.meta}</Typography>} />
+                              <Chip label={row.status} size="small" sx={{ bgcolor: row.status === 'Urgent' ? '#da3633' : '#30363d', color: '#fff' }} />
+                            </ListItem>
+                          </Box>
                         ))}
                       </List>
                     </CardContent>
@@ -347,12 +366,14 @@ export default function PortalShell({
                           <Typography variant="h6" fontWeight={700} color="#f0f6fc">Live location map</Typography>
                           <Chip label="Tracking" size="small" sx={{ bgcolor: '#1f6feb', color: '#fff' }} />
                         </Stack>
-                        <Box sx={{ borderRadius: 3, minHeight: 180, p: 2, bgcolor: '#0d1117', border: '1px solid #30363d' }}>
+                        <Box sx={{ borderRadius: 3, minHeight: 180, p: 2, bgcolor: '#0d1117', border: '1px solid #30363d', '&:hover': { cursor: 'pointer' } }}>
                           <Typography variant="body2" color="#8b949e" sx={{ mb: 1 }}>Live plumber activity in the service area</Typography>
-                          <Box sx={{ position: 'relative', height: 120, borderRadius: 3, bgcolor: '#161b22', overflow: 'hidden' }}>
+                          <Box sx={{ position: 'relative', height: 120, borderRadius: 3, bgcolor: '#161b22', overflow: 'hidden', '&:hover': { cursor: 'pointer' } }}>
                             {mapLocations.map((location, index) => (
                               <Box
                                 key={location.name}
+                                component={Link}
+                                href="/find-plumbers"
                                 sx={{
                                   position: 'absolute',
                                   left: `${20 + index * 24}%`,
@@ -362,6 +383,8 @@ export default function PortalShell({
                                   borderRadius: '50%',
                                   bgcolor: index === 0 ? '#2563eb' : '#0f766e',
                                   boxShadow: '0 0 0 6px rgba(255,255,255,0.7)',
+                                  textDecoration: 'none',
+                                  '&:hover': { transform: 'scale(1.2)', cursor: 'pointer' },
                                 }}
                               />
                             ))}
@@ -374,10 +397,12 @@ export default function PortalShell({
                       <CardContent>
                         <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Upcoming schedule</Typography>
                         <Stack spacing={1.2}>
-                          {calendarItems.map((item) => (
-                            <Box key={item.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d' }}>
-                              <Typography variant="body2" fontWeight={700} color="#f0f6fc">{item.title}</Typography>
-                              <Typography variant="caption" color="#8b949e">{item.detail}</Typography>
+                          {calendarItems.map((item, index) => (
+                            <Box key={item.title} component={Link} href="/customer-dashboard" sx={{ textDecoration: 'none' }}>
+                              <Box sx={{ p: 1.25, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d', '&:hover': { bgcolor: '#21262d', cursor: 'pointer' } }}>
+                                <Typography variant="body2" fontWeight={700} color="#f0f6fc">{item.title}</Typography>
+                                <Typography variant="caption" color="#8b949e">{item.detail}</Typography>
+                              </Box>
                             </Box>
                           ))}
                         </Stack>
@@ -393,10 +418,12 @@ export default function PortalShell({
                     <CardContent>
                       <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Notification center</Typography>
                       <Stack spacing={1.25}>
-                        {alerts.map((alert) => (
-                          <Box key={alert.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d' }}>
-                            <Typography variant="body2" fontWeight={700} color="#f0f6fc">{alert.title}</Typography>
-                            <Typography variant="caption" color="#8b949e">{alert.detail}</Typography>
+                        {alerts.map((alert, index) => (
+                          <Box key={alert.title} component={Link} href="/customer-dashboard" sx={{ textDecoration: 'none' }}>
+                            <Box sx={{ p: 1.25, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d', '&:hover': { bgcolor: '#21262d', cursor: 'pointer' } }}>
+                              <Typography variant="body2" fontWeight={700} color="#f0f6fc">{alert.title}</Typography>
+                              <Typography variant="caption" color="#8b949e">{alert.detail}</Typography>
+                            </Box>
                           </Box>
                         ))}
                       </Stack>
@@ -409,10 +436,12 @@ export default function PortalShell({
                     <CardContent>
                       <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Activity feed</Typography>
                       <Stack spacing={1.25}>
-                        {activities.map((activity) => (
-                          <Box key={activity.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d' }}>
-                            <Typography variant="body2" fontWeight={700} color="#f0f6fc">{activity.title}</Typography>
-                            <Typography variant="caption" color="#8b949e">{activity.detail}</Typography>
+                        {activities.map((activity, index) => (
+                          <Box key={activity.title} component={Link} href="/customer-dashboard" sx={{ textDecoration: 'none' }}>
+                            <Box sx={{ p: 1.25, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d', '&:hover': { bgcolor: '#21262d', cursor: 'pointer' } }}>
+                              <Typography variant="body2" fontWeight={700} color="#f0f6fc">{activity.title}</Typography>
+                              <Typography variant="caption" color="#8b949e">{activity.detail}</Typography>
+                            </Box>
                           </Box>
                         ))}
                       </Stack>
@@ -433,7 +462,7 @@ export default function PortalShell({
                   <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="flex-end">
                     {performanceBars.map((value, index) => (
                       <Box key={`${index}-${value}`} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Box sx={{ width: '100%', height: 140, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d', display: 'flex', alignItems: 'flex-end', p: 1 }}>
+                        <Box component={Link} href="/customer-dashboard" sx={{ width: '100%', height: 140, borderRadius: 2, bgcolor: '#0d1117', border: '1px solid #30363d', display: 'flex', alignItems: 'flex-end', p: 1, textDecoration: 'none', '&:hover': { cursor: 'pointer' } }}>
                           <Box sx={{ width: '100%', height: `${value}%`, borderRadius: 1.5, bgcolor: index % 2 === 0 ? '#1f6feb' : '#238636' }} />
                         </Box>
                         <Typography variant="caption" color="#8b949e" sx={{ mt: 1 }}>
