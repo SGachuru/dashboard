@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
+  Avatar,
   Box,
   Button,
   Card,
@@ -148,7 +149,7 @@ export default function PortalShell({
   }, [session])
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#0d1117', color: '#f0f6fc' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#0d1117', color: '#f0f6fc', display: 'flex', flexDirection: 'column' }}>
       <Paper sx={{ borderRadius: 0, bgcolor: '#161b22', borderBottom: '1px solid #30363d', position: 'sticky', top: 0, zIndex: 2, boxShadow: 'none' }}>
         <Container maxWidth="xl">
           <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }} spacing={2} sx={{ py: 2 }}>
@@ -167,19 +168,24 @@ export default function PortalShell({
               <Stack direction="row" spacing={1}>
                 <Button variant="outlined" size="small" sx={{ color: '#f0f6fc', borderColor: '#30363d' }}>🔔 3</Button>
                 <Button variant="outlined" size="small" sx={{ color: '#f0f6fc', borderColor: '#30363d' }}>💬 5</Button>
+                <Button variant="outlined" size="small" sx={{ color: '#f0f6fc', borderColor: '#30363d' }}>Help</Button>
+              </Stack>
+              <Stack direction="row" alignItems="center" spacing={1.25}>
+                <Avatar sx={{ width: 32, height: 32, bgcolor: '#1f6feb', fontSize: '0.9rem' }}>{session?.name?.[0] || 'U'}</Avatar>
+                <Box>
+                  <Typography variant="caption" color="#f0f6fc" fontWeight={700}>{session?.name || 'User Profile'}</Typography>
+                  <Typography variant="caption" color="#8b949e" display="block">{currentUserLabel}</Typography>
+                </Box>
                 <Button variant="contained" size="small" onClick={handleLogout} sx={{ bgcolor: '#238636', '&:hover': { bgcolor: '#2ea043' } }}>
                   {session ? 'Logout' : 'Login'}
                 </Button>
               </Stack>
-              <Typography variant="caption" color="#8b949e">
-                {currentUserLabel}
-              </Typography>
             </Stack>
           </Stack>
         </Container>
       </Paper>
 
-      <Container maxWidth="xl" sx={{ py: { xs: 3, md: 4 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 3, md: 4 }, flex: 1 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={2.5}>
             <Paper sx={{ p: 2.5, borderRadius: 4, height: '100%', transition: 'all 0.2s ease', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
@@ -241,11 +247,16 @@ export default function PortalShell({
           <Grid item xs={12} lg={9.5}>
             <Stack spacing={3}>
               <Paper sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-                <Typography variant="overline" color="#58a6ff" fontWeight={700}>Digital operations hub</Typography>
-                <Typography variant="h3" fontWeight={800} color="#f0f6fc">{title}</Typography>
-                <Typography variant="body1" color="#8b949e" sx={{ mt: 1, maxWidth: 760 }}>
-                  {subtitle}
-                </Typography>
+                <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }} spacing={2}>
+                  <Box>
+                    <Typography variant="overline" color="#58a6ff" fontWeight={700}>Dashboard overview</Typography>
+                    <Typography variant="h3" fontWeight={800} color="#f0f6fc">{title}</Typography>
+                    <Typography variant="body1" color="#8b949e" sx={{ mt: 1, maxWidth: 760 }}>
+                      {subtitle}
+                    </Typography>
+                  </Box>
+                  <Chip label={role} size="small" sx={{ bgcolor: '#1f6feb', color: '#fff' }} />
+                </Stack>
               </Paper>
 
               <Grid container spacing={2}>
@@ -389,7 +400,7 @@ export default function PortalShell({
               </Card>
 
               {children ? (
-                <Paper sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 4 }}>
+                <Paper sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
                   {children}
                 </Paper>
               ) : null}
@@ -397,6 +408,19 @@ export default function PortalShell({
           </Grid>
         </Grid>
       </Container>
+
+      <Box component="footer" sx={{ mt: 'auto', borderTop: '1px solid #30363d', bgcolor: '#0d1117' }}>
+        <Container maxWidth="xl" sx={{ py: 2.25 }}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={1.5}>
+            <Stack direction="row" spacing={2} flexWrap="wrap">
+              <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#8b949e', px: 0, minWidth: 'auto' }}>Privacy</Button>
+              <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#8b949e', px: 0, minWidth: 'auto' }}>Terms</Button>
+              <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#8b949e', px: 0, minWidth: 'auto' }}>Support</Button>
+            </Stack>
+            <Typography variant="caption" color="#8b949e">Version 1.0.0</Typography>
+          </Stack>
+        </Container>
+      </Box>
     </Box>
   )
 }
