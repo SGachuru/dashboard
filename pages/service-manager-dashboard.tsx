@@ -24,14 +24,14 @@ const ServiceManagerDashboardPage: NextPage = () => {
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
-          <Card sx={{ borderRadius: 4 }}>
+          <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
             <CardContent>
-              <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Dispatch overview</Typography>
+              <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Dispatch overview</Typography>
               <Stack spacing={1.5}>
                 {dispatches.map((dispatch) => (
-                  <Box key={dispatch.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#f8fafc' }}>
-                    <Typography variant="body2" fontWeight={700}>{dispatch.title}</Typography>
-                    <Chip label={dispatch.status} color="primary" size="small" sx={{ mt: 0.75 }} />
+                  <Box key={dispatch.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#0d1117' }}>
+                    <Typography variant="body2" fontWeight={700} color="#f0f6fc">{dispatch.title}</Typography>
+                    <Chip label={dispatch.status} size="small" sx={{ mt: 0.75, bgcolor: '#1f6feb', color: '#fff' }} />
                   </Box>
                 ))}
               </Stack>
@@ -39,12 +39,12 @@ const ServiceManagerDashboardPage: NextPage = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={5}>
-          <Card sx={{ borderRadius: 4 }}>
+          <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
             <CardContent>
-              <Typography variant="h6" fontWeight={700}>Operations snapshot</Typography>
+              <Typography variant="h6" fontWeight={700} color="#f0f6fc">Operations snapshot</Typography>
               <Stack spacing={1.5} sx={{ mt: 1.5 }}>
-                <Box><Typography variant="body2" color="text.secondary">Response time</Typography><Typography variant="h6" fontWeight={700}>17 min</Typography></Box>
-                <Box><Typography variant="body2" color="text.secondary">On-time rate</Typography><Typography variant="h6" fontWeight={700}>94%</Typography></Box>
+                <Box><Typography variant="body2" color="#8b949e">Response time</Typography><Typography variant="h6" fontWeight={700} color="#f0f6fc">17 min</Typography></Box>
+                <Box><Typography variant="body2" color="#8b949e">On-time rate</Typography><Typography variant="h6" fontWeight={700} color="#f0f6fc">94%</Typography></Box>
               </Stack>
             </CardContent>
           </Card>

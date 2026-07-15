@@ -38,20 +38,20 @@ const HomePage: NextPage = () => {
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
-          <Card sx={{ borderRadius: 4, height: '100%' }}>
+          <Card sx={{ borderRadius: 4, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
             <CardContent>
-              <Typography variant="overline" color="primary" fontWeight={700}>Why it stands out</Typography>
-              <Typography variant="h4" fontWeight={800} sx={{ mt: 1 }}>
+              <Typography variant="overline" color="#58a6ff" fontWeight={700}>Why it stands out</Typography>
+              <Typography variant="h4" fontWeight={800} color="#f0f6fc" sx={{ mt: 1 }}>
                 One platform for every role, every step of the journey.
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mt: 1.5 }}>
+              <Typography variant="body1" color="#8b949e" sx={{ mt: 1.5 }}>
                 Customers can register, request service, and follow progress. Plumbers manage jobs and earnings. Partners launch campaigns. Managers and admins keep everything coordinated.
               </Typography>
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 2.5 }}>
-                <Button component={Link} href="/customer-login" variant="contained" size="large">
+                <Button component={Link} href="/customer-login" variant="contained" size="large" sx={{ bgcolor: '#238636', '&:hover': { bgcolor: '#2ea043' } }}>
                   Start as customer
                 </Button>
-                <Button component={Link} href="/find-plumbers" variant="outlined" size="large">
+                <Button component={Link} href="/find-plumbers" variant="outlined" size="large" sx={{ color: '#f0f6fc', borderColor: '#30363d' }}>
                   Browse plumbers
                 </Button>
               </Stack>
@@ -60,21 +60,21 @@ const HomePage: NextPage = () => {
         </Grid>
 
         <Grid item xs={12} md={5}>
-          <Card sx={{ borderRadius: 4, height: '100%' }}>
+          <Card sx={{ borderRadius: 4, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
             <CardContent>
-              <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5 }}>Portal highlights</Typography>
+              <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 1.5 }}>Portal highlights</Typography>
               <Stack spacing={1.5}>
-                <Box sx={{ p: 1.5, bgcolor: '#f8fbff', borderRadius: 3 }}>
-                  <Typography variant="subtitle2" fontWeight={700}>Verified workforces</Typography>
-                  <Typography variant="body2" color="text.secondary">Trusted plumber profiles with skill matching and ratings.</Typography>
+                <Box sx={{ p: 1.5, bgcolor: '#0d1117', borderRadius: 3 }}>
+                  <Typography variant="subtitle2" fontWeight={700} color="#f0f6fc">Verified workforces</Typography>
+                  <Typography variant="body2" color="#8b949e">Trusted plumber profiles with skill matching and ratings.</Typography>
                 </Box>
-                <Box sx={{ p: 1.5, bgcolor: '#f8fbff', borderRadius: 3 }}>
-                  <Typography variant="subtitle2" fontWeight={700}>Live operations</Typography>
-                  <Typography variant="body2" color="text.secondary">Dispatching, tracking, and reporting from one dashboard.</Typography>
+                <Box sx={{ p: 1.5, bgcolor: '#0d1117', borderRadius: 3 }}>
+                  <Typography variant="subtitle2" fontWeight={700} color="#f0f6fc">Live operations</Typography>
+                  <Typography variant="body2" color="#8b949e">Dispatching, tracking, and reporting from one dashboard.</Typography>
                 </Box>
-                <Box sx={{ p: 1.5, bgcolor: '#f8fbff', borderRadius: 3 }}>
-                  <Typography variant="subtitle2" fontWeight={700}>Scalable growth</Typography>
-                  <Typography variant="body2" color="text.secondary">Partner campaigns, subscriptions, and analytics all in one place.</Typography>
+                <Box sx={{ p: 1.5, bgcolor: '#0d1117', borderRadius: 3 }}>
+                  <Typography variant="subtitle2" fontWeight={700} color="#f0f6fc">Scalable growth</Typography>
+                  <Typography variant="body2" color="#8b949e">Partner campaigns, subscriptions, and analytics all in one place.</Typography>
                 </Box>
               </Stack>
             </CardContent>
@@ -84,14 +84,14 @@ const HomePage: NextPage = () => {
         {highlights.map((item) => (
           <Grid item xs={12} md={4} key={item.title}>
             <Box component={Link} href={item.href} sx={{ textDecoration: 'none' }}>
-              <Card sx={{ borderRadius: 4, height: '100%', '&:hover': { boxShadow: 6, cursor: 'pointer' } }}>
+              <Card sx={{ borderRadius: 4, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none', '&:hover': { borderColor: '#1f6feb' } }}>
                 <CardContent>
-                  <Chip label="Ready" color="primary" size="small" sx={{ mb: 1.5 }} />
-                  <Typography variant="h6" fontWeight={700}>{item.title}</Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
+                  <Chip label="Ready" size="small" sx={{ mb: 1.5, bgcolor: '#1f6feb', color: '#fff' }} />
+                  <Typography variant="h6" fontWeight={700} color="#f0f6fc">{item.title}</Typography>
+                  <Typography variant="body2" color="#8b949e" sx={{ mt: 0.5, mb: 2 }}>
                     {item.description}
                   </Typography>
-                  <Button variant="outlined">Open section</Button>
+                  <Button variant="outlined" sx={{ color: '#f0f6fc', borderColor: '#30363d' }}>Open section</Button>
                 </CardContent>
               </Card>
             </Box>
