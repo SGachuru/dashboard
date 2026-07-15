@@ -119,9 +119,10 @@ const CustomerLoginPage: NextPage = () => {
     <PortalShell title="Customer Registration / Login" subtitle="Sign in with your name, phone number, and role to move into the matching operations workspace." active="Login">
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
-          <Card sx={{ borderRadius: 4 }}>
-            <CardContent>
-              <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Sign in or register</Typography>
+          <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Sign in or register</Typography>
+              <Typography variant="body2" color="#8b949e" sx={{ mb: 3 }}>Use your details and select the workspace you need access to.</Typography>
               <Box component="form" onSubmit={handleSubmit}>
                 <Stack spacing={2}>
                   <TextField
@@ -130,6 +131,7 @@ const CustomerLoginPage: NextPage = () => {
                     required
                     value={formData.name}
                     onChange={(event) => setFormData((previous) => ({ ...previous, name: event.target.value }))}
+                    sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#0d1117', color: '#f0f6fc', borderColor: '#30363d' } }}
                   />
                   <TextField
                     label="Phone"
@@ -138,26 +140,28 @@ const CustomerLoginPage: NextPage = () => {
                     type="tel"
                     value={formData.phone}
                     onChange={(event) => setFormData((previous) => ({ ...previous, phone: event.target.value }))}
+                    sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#0d1117', color: '#f0f6fc', borderColor: '#30363d' } }}
                   />
                   <FormControl fullWidth>
-                    <InputLabel id="role-select-label">Role</InputLabel>
+                    <InputLabel id="role-select-label" sx={{ color: '#8b949e' }}>Role</InputLabel>
                     <Select
                       labelId="role-select-label"
                       label="Role"
                       value={formData.role}
                       onChange={(event) => setFormData((previous) => ({ ...previous, role: event.target.value }))}
+                      sx={{ bgcolor: '#0d1117', color: '#f0f6fc', '& .MuiOutlinedInput-notchedOutline': { borderColor: '#30363d' } }}
                     >
                       {roles.map((role) => (
-                        <MenuItem key={role.value} value={role.value}>
+                        <MenuItem key={role.value} value={role.value} sx={{ bgcolor: '#161b22', color: '#f0f6fc' }}>
                           {role.label}
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                   {feedback ? (
-                    <Alert severity={feedback.type}>{feedback.message}</Alert>
+                    <Alert severity={feedback.type} sx={{ bgcolor: feedback.type === 'success' ? '#1f2d1f' : '#2d1518', color: '#f0f6fc', border: '1px solid #30363d' }}>{feedback.message}</Alert>
                   ) : null}
-                  <Button type="submit" variant="contained" size="large" disabled={isSubmitting}>
+                  <Button type="submit" variant="contained" size="large" disabled={isSubmitting} sx={{ bgcolor: '#238636', '&:hover': { bgcolor: '#2ea043' } }}>
                     {isSubmitting ? 'Signing in…' : 'Continue'}
                   </Button>
                 </Stack>
@@ -166,10 +170,10 @@ const CustomerLoginPage: NextPage = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={5}>
-          <Card sx={{ borderRadius: 4, height: '100%' }}>
-            <CardContent>
-              <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Why customers choose it</Typography>
-              <Box component="ul" sx={{ pl: 2.5, color: 'text.secondary' }}>
+          <Card sx={{ borderRadius: 4, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Why customers choose it</Typography>
+              <Box component="ul" sx={{ pl: 2.5, color: '#8b949e', lineHeight: 1.7 }}>
                 <li>Fast sign-in with your role in mind</li>
                 <li>Immediate access to the matching dashboard</li>
                 <li>Live updates, scheduling, and notifications</li>
