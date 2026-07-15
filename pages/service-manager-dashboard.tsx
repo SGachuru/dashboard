@@ -4,9 +4,6 @@ import {
   CardContent,
   Chip,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   Typography,
 } from '@mui/material'
@@ -20,20 +17,37 @@ const dispatches = [
 
 const ServiceManagerDashboardPage: NextPage = () => {
   return (
-    <PortalShell title="Service Manager Dashboard" subtitle="Coordinate dispatch operations, map coverage, plumber management, and reporting workflows." active="Service Manager">
+    <PortalShell
+      title="Service Manager Dashboard"
+      subtitle="Coordinate dispatch operations, map coverage, plumber management, and reporting workflows."
+      active="Service Manager"
+      role="Service Manager"
+      stats={[
+        { label: 'Map coverage', value: '92%', trend: '+4%' },
+        { label: 'Service SLA', value: '96%', trend: '+2%' },
+        { label: 'Active jobs', value: '48', trend: '+8%' },
+        { label: 'Technicians', value: '26', trend: '+1' },
+      ]}
+      menuItems={[
+        { label: 'Dispatch', href: '/service-manager-dashboard', icon: '🧭' },
+        { label: 'Coverage', href: '/service-manager-dashboard', icon: '🗺️' },
+        { label: 'Plumbers', href: '/service-manager-dashboard', icon: '🧰' },
+        { label: 'Reports', href: '/service-manager-dashboard', icon: '📈' },
+      ]}
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ borderRadius: 4 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Dispatch overview</Typography>
-              <List>
+              <Stack spacing={1.5}>
                 {dispatches.map((dispatch) => (
-                  <ListItem key={dispatch.title} sx={{ px: 0 }}>
-                    <ListItemText primary={dispatch.title} />
-                    <Chip label={dispatch.status} color="primary" size="small" />
-                  </ListItem>
+                  <Box key={dispatch.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#f8fafc' }}>
+                    <Typography variant="body2" fontWeight={700}>{dispatch.title}</Typography>
+                    <Chip label={dispatch.status} color="primary" size="small" sx={{ mt: 0.75 }} />
+                  </Box>
                 ))}
-              </List>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>
@@ -42,8 +56,8 @@ const ServiceManagerDashboardPage: NextPage = () => {
             <CardContent>
               <Typography variant="h6" fontWeight={700}>Operations snapshot</Typography>
               <Stack spacing={1.5} sx={{ mt: 1.5 }}>
-                <Box><Typography variant="body2" color="text.secondary">Map coverage</Typography><Typography variant="h6" fontWeight={700}>92%</Typography></Box>
-                <Box><Typography variant="body2" color="text.secondary">Service SLA</Typography><Typography variant="h6" fontWeight={700}>96%</Typography></Box>
+                <Box><Typography variant="body2" color="text.secondary">Response time</Typography><Typography variant="h6" fontWeight={700}>17 min</Typography></Box>
+                <Box><Typography variant="body2" color="text.secondary">On-time rate</Typography><Typography variant="h6" fontWeight={700}>94%</Typography></Box>
               </Stack>
             </CardContent>
           </Card>

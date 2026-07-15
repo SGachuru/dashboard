@@ -4,9 +4,6 @@ import {
   CardContent,
   Chip,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   Typography,
 } from '@mui/material'
@@ -21,31 +18,47 @@ const adminItems = [
 
 const AdminDashboardPage: NextPage = () => {
   return (
-    <PortalShell title="Admin Dashboard" subtitle="Control users, KYC approvals, subscriptions, disputes, analytics, and content management from a central admin workspace." active="Admin">
+    <PortalShell
+      title="Admin Dashboard"
+      subtitle="Control users, KYC approvals, subscriptions, disputes, analytics, and content management from a central admin workspace."
+      active="Admin"
+      role="Administrator"
+      stats={[
+        { label: 'Users', value: '12.4k', trend: '+14%' },
+        { label: 'Subscriptions', value: '3.8k', trend: '+9%' },
+        { label: 'Dispute rate', value: '1.2%', trend: '-0.3%' },
+        { label: 'Content updates', value: '64', trend: '+5%' },
+      ]}
+      menuItems={[
+        { label: 'Admin Overview', href: '/admin-dashboard', icon: '📊' },
+        { label: 'KYC Queue', href: '/admin-dashboard', icon: '🪪' },
+        { label: 'Disputes', href: '/admin-dashboard', icon: '⚖️' },
+        { label: 'Billing', href: '/admin-dashboard', icon: '💳' },
+      ]}
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ borderRadius: 4 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Admin operations</Typography>
-              <List>
+              <Stack spacing={1.5}>
                 {adminItems.map((item) => (
-                  <ListItem key={item.title} sx={{ px: 0 }}>
-                    <ListItemText primary={item.title} />
-                    <Chip label={item.status} color="primary" size="small" />
-                  </ListItem>
+                  <Box key={item.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#f8fafc' }}>
+                    <Typography variant="body2" fontWeight={700}>{item.title}</Typography>
+                    <Chip label={item.status} color="primary" size="small" sx={{ mt: 0.75 }} />
+                  </Box>
                 ))}
-              </List>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} md={5}>
           <Card sx={{ borderRadius: 4 }}>
             <CardContent>
-              <Typography variant="h6" fontWeight={700}>Platform metrics</Typography>
+              <Typography variant="h6" fontWeight={700}>Platform health</Typography>
               <Stack spacing={1.5} sx={{ mt: 1.5 }}>
-                <Box><Typography variant="body2" color="text.secondary">Users</Typography><Typography variant="h6" fontWeight={700}>12.4k</Typography></Box>
-                <Box><Typography variant="body2" color="text.secondary">Active subscriptions</Typography><Typography variant="h6" fontWeight={700}>3.8k</Typography></Box>
-                <Box><Typography variant="body2" color="text.secondary">Dispute rate</Typography><Typography variant="h6" fontWeight={700}>1.2%</Typography></Box>
+                <Box><Typography variant="body2" color="text.secondary">System uptime</Typography><Typography variant="h6" fontWeight={700}>99.98%</Typography></Box>
+                <Box><Typography variant="body2" color="text.secondary">Support backlog</Typography><Typography variant="h6" fontWeight={700}>18 tickets</Typography></Box>
               </Stack>
             </CardContent>
           </Card>

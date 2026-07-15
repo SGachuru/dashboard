@@ -4,9 +4,6 @@ import {
   CardContent,
   Chip,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   Typography,
 } from '@mui/material'
@@ -20,20 +17,38 @@ const bookings = [
 
 const CustomerDashboardPage: NextPage = () => {
   return (
-    <PortalShell title="Customer Dashboard" subtitle="Track bookings, live updates, reviews, and service disputes all in one place." active="Customer Dashboard">
+    <PortalShell
+      title="Customer Dashboard"
+      subtitle="Track bookings, live updates, reviews, and service disputes all in one place."
+      active="Customer Dashboard"
+      role="Customer"
+      stats={[
+        { label: 'Bookings', value: '12', trend: '+3' },
+        { label: 'Saved plans', value: '4', trend: '+1' },
+        { label: 'Services used', value: '7', trend: '+2' },
+        { label: 'Support cases', value: '2', trend: '-1' },
+      ]}
+      menuItems={[
+        { label: 'Overview', href: '/customer-dashboard', icon: '📋' },
+        { label: 'Bookings', href: '/customer-dashboard', icon: '🗓️' },
+        { label: 'Messages', href: '/customer-dashboard', icon: '💬' },
+        { label: 'Settings', href: '/customer-dashboard', icon: '⚙️' },
+      ]}
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ borderRadius: 4 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Booking history</Typography>
-              <List>
+              <Stack spacing={1.5}>
                 {bookings.map((booking) => (
-                  <ListItem key={booking.title} sx={{ px: 0 }}>
-                    <ListItemText primary={booking.title} secondary={booking.date} />
-                    <Chip label={booking.status} color="primary" size="small" />
-                  </ListItem>
+                  <Box key={booking.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#f8fafc' }}>
+                    <Typography variant="body2" fontWeight={700}>{booking.title}</Typography>
+                    <Typography variant="caption" color="text.secondary">{booking.date}</Typography>
+                    <Chip label={booking.status} color="primary" size="small" sx={{ mt: 0.75, display: 'block', width: 'fit-content' }} />
+                  </Box>
                 ))}
-              </List>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>

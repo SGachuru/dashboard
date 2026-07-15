@@ -4,9 +4,6 @@ import {
   CardContent,
   Chip,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   Typography,
 } from '@mui/material'
@@ -20,20 +17,37 @@ const campaigns = [
 
 const PartnerPortalPage: NextPage = () => {
   return (
-    <PortalShell title="Partner Portal" subtitle="Support supplier ads, campaign management, and partner engagement in one place." active="Partner Portal">
+    <PortalShell
+      title="Partner Portal"
+      subtitle="Support supplier ads, campaign management, and partner engagement in one place."
+      active="Partner Portal"
+      role="Partner"
+      stats={[
+        { label: 'Ad inventory', value: '24 placements', trend: '+3' },
+        { label: 'Lead generation', value: '312 leads', trend: '+18%' },
+        { label: 'Campaigns', value: '8', trend: '+2' },
+        { label: 'Partner score', value: '4.8/5', trend: '+0.2' },
+      ]}
+      menuItems={[
+        { label: 'Campaigns', href: '/partner-portal', icon: '📣' },
+        { label: 'Leads', href: '/partner-portal', icon: '🧲' },
+        { label: 'Offers', href: '/partner-portal', icon: '🎁' },
+        { label: 'Reporting', href: '/partner-portal', icon: '📈' },
+      ]}
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ borderRadius: 4 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Campaigns</Typography>
-              <List>
+              <Stack spacing={1.5}>
                 {campaigns.map((campaign) => (
-                  <ListItem key={campaign.title} sx={{ px: 0 }}>
-                    <ListItemText primary={campaign.title} />
-                    <Chip label={campaign.status} color="primary" size="small" />
-                  </ListItem>
+                  <Box key={campaign.title} sx={{ p: 1.25, borderRadius: 2, bgcolor: '#f8fafc' }}>
+                    <Typography variant="body2" fontWeight={700}>{campaign.title}</Typography>
+                    <Chip label={campaign.status} color="primary" size="small" sx={{ mt: 0.75 }} />
+                  </Box>
                 ))}
-              </List>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>
@@ -42,8 +56,8 @@ const PartnerPortalPage: NextPage = () => {
             <CardContent>
               <Typography variant="h6" fontWeight={700}>Partner tools</Typography>
               <Stack spacing={1.5} sx={{ mt: 1.5 }}>
-                <Box><Typography variant="body2" color="text.secondary">Ad inventory</Typography><Typography variant="h6" fontWeight={700}>24 placements</Typography></Box>
-                <Box><Typography variant="body2" color="text.secondary">Lead generation</Typography><Typography variant="h6" fontWeight={700}>312 leads</Typography></Box>
+                <Box><Typography variant="body2" color="text.secondary">ROI outlook</Typography><Typography variant="h6" fontWeight={700}>+22%</Typography></Box>
+                <Box><Typography variant="body2" color="text.secondary">Retention</Typography><Typography variant="h6" fontWeight={700}>89%</Typography></Box>
               </Stack>
             </CardContent>
           </Card>
