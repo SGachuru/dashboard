@@ -35,7 +35,6 @@ const HomePage: NextPage = () => {
     <PortalShell
       title="A cleaner, modern portal for plumbing operations"
       subtitle="Bring customers, plumbers, partners, and internal teams into one polished experience that feels simple, trusted, and ready for growth."
-      active="Home"
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>

@@ -116,7 +116,10 @@ const CustomerLoginPage: NextPage = () => {
   }
 
   return (
-    <PortalShell title="Customer Registration / Login" subtitle="Sign in with your name, phone number, and role to move into the matching operations workspace." active="Login">
+    <PortalShell
+      title="Customer Registration / Login"
+      subtitle="Sign in with your name, phone number, and role to move into the matching operations workspace."
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>

@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material'
 import type { NextPage } from 'next'
-import PortalShell from '../components/PortalShell'
+import CustomerDashboardShell from '../components/CustomerDashboardShell'
 
 const bookings = [
   { title: 'Leak repair', date: '14 Jul 2026', status: 'Completed' },
@@ -17,23 +17,10 @@ const bookings = [
 
 const CustomerDashboardPage: NextPage = () => {
   return (
-    <PortalShell
+    <CustomerDashboardShell
       title="Customer Dashboard"
       subtitle="Track bookings, live updates, reviews, and service disputes all in one place."
-      active="Customer Dashboard"
-      role="Customer"
-      stats={[
-        { label: 'Bookings', value: '12', trend: '+3' },
-        { label: 'Saved plans', value: '4', trend: '+1' },
-        { label: 'Services used', value: '7', trend: '+2' },
-        { label: 'Support cases', value: '2', trend: '-1' },
-      ]}
-      menuItems={[
-        { label: 'Overview', href: '/customer-dashboard', icon: '📋' },
-        { label: 'Bookings', href: '/customer-dashboard', icon: '🗓️' },
-        { label: 'Messages', href: '/customer-dashboard', icon: '💬' },
-        { label: 'Settings', href: '/customer-dashboard', icon: '⚙️' },
-      ]}
+      active="Overview"
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
@@ -65,7 +52,7 @@ const CustomerDashboardPage: NextPage = () => {
           </Card>
         </Grid>
       </Grid>
-    </PortalShell>
+    </CustomerDashboardShell>
   )
 }
 

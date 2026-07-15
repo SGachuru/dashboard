@@ -14,7 +14,10 @@ import PortalShell from '../components/PortalShell'
 
 const RequestServicePage: NextPage = () => {
   return (
-    <PortalShell title="Request Service" subtitle="Customers can submit plumbing requests, select urgency, and share service details instantly." active="Request Service">
+    <PortalShell
+      title="Request Service"
+      subtitle="Customers can submit plumbing requests, select urgency, and share service details instantly."
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ borderRadius: 4 }}>

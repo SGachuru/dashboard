@@ -20,7 +20,10 @@ const plumbers = [
 
 const FindPlumbersPage: NextPage = () => {
   return (
-    <PortalShell title="Find Plumbers" subtitle="Browse verified plumbers by skill, rating, service area, and availability." active="Find Plumbers">
+    <PortalShell
+      title="Find Plumbers"
+      subtitle="Browse verified plumbers by skill, rating, service area, and availability."
+    >
       <Grid container spacing={3}>
         {plumbers.map((plumber) => (
           <Grid item xs={12} md={4} key={plumber.name}>

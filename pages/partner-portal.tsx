@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material'
 import type { NextPage } from 'next'
-import PortalShell from '../components/PortalShell'
+import PartnerPortalShell from '../components/PartnerPortalShell'
 
 const campaigns = [
   { title: 'Summer Plumbing Offer', status: 'Running' },
@@ -17,23 +17,10 @@ const campaigns = [
 
 const PartnerPortalPage: NextPage = () => {
   return (
-    <PortalShell
+    <PartnerPortalShell
       title="Partner Portal"
       subtitle="Support supplier ads, campaign management, and partner engagement in one place."
-      active="Partner Portal"
-      role="Partner"
-      stats={[
-        { label: 'Ad inventory', value: '24 placements', trend: '+3' },
-        { label: 'Lead generation', value: '312 leads', trend: '+18%' },
-        { label: 'Campaigns', value: '8', trend: '+2' },
-        { label: 'Partner score', value: '4.8/5', trend: '+0.2' },
-      ]}
-      menuItems={[
-        { label: 'Campaigns', href: '/partner-portal', icon: '📣' },
-        { label: 'Leads', href: '/partner-portal', icon: '🧲' },
-        { label: 'Offers', href: '/partner-portal', icon: '🎁' },
-        { label: 'Reporting', href: '/partner-portal', icon: '📈' },
-      ]}
+      active="Campaigns"
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
@@ -63,7 +50,7 @@ const PartnerPortalPage: NextPage = () => {
           </Card>
         </Grid>
       </Grid>
-    </PortalShell>
+    </PartnerPortalShell>
   )
 }
 

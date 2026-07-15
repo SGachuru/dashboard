@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material'
 import type { NextPage } from 'next'
-import PortalShell from '../components/PortalShell'
+import AdminDashboardShell from '../components/AdminDashboardShell'
 
 const adminItems = [
   { title: 'Approve KYC requests', status: 'Pending' },
@@ -18,23 +18,10 @@ const adminItems = [
 
 const AdminDashboardPage: NextPage = () => {
   return (
-    <PortalShell
+    <AdminDashboardShell
       title="Admin Dashboard"
       subtitle="Control users, KYC approvals, subscriptions, disputes, analytics, and content management from a central admin workspace."
-      active="Admin"
-      role="Administrator"
-      stats={[
-        { label: 'Users', value: '12.4k', trend: '+14%' },
-        { label: 'Subscriptions', value: '3.8k', trend: '+9%' },
-        { label: 'Dispute rate', value: '1.2%', trend: '-0.3%' },
-        { label: 'Content updates', value: '64', trend: '+5%' },
-      ]}
-      menuItems={[
-        { label: 'Admin Overview', href: '/admin-dashboard', icon: '📊' },
-        { label: 'KYC Queue', href: '/admin-dashboard', icon: '🪪' },
-        { label: 'Disputes', href: '/admin-dashboard', icon: '⚖️' },
-        { label: 'Billing', href: '/admin-dashboard', icon: '💳' },
-      ]}
+      active="Admin Overview"
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
@@ -64,7 +51,7 @@ const AdminDashboardPage: NextPage = () => {
           </Card>
         </Grid>
       </Grid>
-    </PortalShell>
+    </AdminDashboardShell>
   )
 }
 

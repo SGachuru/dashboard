@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material'
 import type { NextPage } from 'next'
-import PortalShell from '../components/PortalShell'
+import ServiceManagerShell from '../components/ServiceManagerShell'
 
 const dispatches = [
   { title: 'Route 12 active jobs', status: 'Live' },
@@ -17,23 +17,10 @@ const dispatches = [
 
 const ServiceManagerDashboardPage: NextPage = () => {
   return (
-    <PortalShell
+    <ServiceManagerShell
       title="Service Manager Dashboard"
       subtitle="Coordinate dispatch operations, map coverage, plumber management, and reporting workflows."
-      active="Service Manager"
-      role="Service Manager"
-      stats={[
-        { label: 'Map coverage', value: '92%', trend: '+4%' },
-        { label: 'Service SLA', value: '96%', trend: '+2%' },
-        { label: 'Active jobs', value: '48', trend: '+8%' },
-        { label: 'Technicians', value: '26', trend: '+1' },
-      ]}
-      menuItems={[
-        { label: 'Dispatch', href: '/service-manager-dashboard', icon: '🧭' },
-        { label: 'Coverage', href: '/service-manager-dashboard', icon: '🗺️' },
-        { label: 'Plumbers', href: '/service-manager-dashboard', icon: '🧰' },
-        { label: 'Reports', href: '/service-manager-dashboard', icon: '📈' },
-      ]}
+      active="Dispatch"
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
@@ -63,7 +50,7 @@ const ServiceManagerDashboardPage: NextPage = () => {
           </Card>
         </Grid>
       </Grid>
-    </PortalShell>
+    </ServiceManagerShell>
   )
 }
 

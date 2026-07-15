@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material'
 import type { NextPage } from 'next'
-import PortalShell from '../components/PortalShell'
+import PlumberDashboardShell from '../components/PlumberDashboardShell'
 
 const jobs = [
   { title: 'Emergency leak', client: 'A. Adams', status: 'New request' },
@@ -20,7 +20,11 @@ const jobs = [
 
 const PlumberDashboardPage: NextPage = () => {
   return (
-    <PortalShell title="Plumber Dashboard" subtitle="Manage incoming job requests, availability, subscriptions, earnings, and customer rating trends." active="Plumber Dashboard">
+    <PlumberDashboardShell
+      title="Plumber Dashboard"
+      subtitle="Manage incoming job requests, availability, subscriptions, earnings, and customer rating trends."
+      active="Jobs"
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ borderRadius: 4 }}>
@@ -50,7 +54,7 @@ const PlumberDashboardPage: NextPage = () => {
           </Card>
         </Grid>
       </Grid>
-    </PortalShell>
+    </PlumberDashboardShell>
   )
 }
 
