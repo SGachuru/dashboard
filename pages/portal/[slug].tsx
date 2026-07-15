@@ -9,6 +9,7 @@ import {
   Container,
   Divider,
   Grid,
+  LinearProgress,
   List,
   ListItem,
   ListItemAvatar,
@@ -29,6 +30,8 @@ interface PortalConfig {
   metrics: Array<{ label: string; value: string; detail: string }>
   tasks: Array<{ title: string; owner: string; status: string }>
   highlights: Array<{ title: string; description: string }>
+  quickActions: Array<{ label: string; hint: string }>
+  health: Array<{ label: string; value: number; color: string }>
 }
 
 const portalMap: Record<string, PortalConfig> = {
@@ -55,6 +58,16 @@ const portalMap: Record<string, PortalConfig> = {
       { title: 'Service health', description: 'Track resolution speed, repeat issues, and service-level outcomes.' },
       { title: 'Account control', description: 'Manage teams, subscriptions, and customer accounts from a single view.' },
     ],
+    quickActions: [
+      { label: 'Create dispatch', hint: 'Open a new routing job' },
+      { label: 'Assign technician', hint: 'Rebalance the active fleet' },
+      { label: 'Send update', hint: 'Inform customers of ETA' },
+    ],
+    health: [
+      { label: 'Route efficiency', value: 91, color: '#1976d2' },
+      { label: 'Customer satisfaction', value: 87, color: '#2e7d32' },
+      { label: 'Escalation risk', value: 34, color: '#f57c00' },
+    ],
   },
   'partner-portal': {
     title: 'Partner Portal',
@@ -79,6 +92,16 @@ const portalMap: Record<string, PortalConfig> = {
       { title: 'Campaign reporting', description: 'Compare promotion performance across channels and regions.' },
       { title: 'Lead pipeline', description: 'Monitor engagement, conversion rates, and revenue impact.' },
     ],
+    quickActions: [
+      { label: 'Review partner requests', hint: 'Approve pending submissions' },
+      { label: 'Launch campaign', hint: 'Open a new offer package' },
+      { label: 'Share report', hint: 'Send performance insight' },
+    ],
+    health: [
+      { label: 'Partner retention', value: 88, color: '#7b1fa2' },
+      { label: 'Campaign ROI', value: 79, color: '#2e7d32' },
+      { label: 'Lead readiness', value: 93, color: '#1976d2' },
+    ],
   },
   'admin-dashboard': {
     title: 'Admin Dashboard',
@@ -102,6 +125,16 @@ const portalMap: Record<string, PortalConfig> = {
       { title: 'User management', description: 'Approve access, retire users, and monitor role changes.' },
       { title: 'Compliance controls', description: 'Review KYC records and ensure every action is auditable.' },
       { title: 'Operational visibility', description: 'Track uptime, incidents, and platform health in real time.' },
+    ],
+    quickActions: [
+      { label: 'Audit access', hint: 'Review recent permission changes' },
+      { label: 'Approve KYC', hint: 'Clear pending verification tasks' },
+      { label: 'Run report', hint: 'Generate the executive summary' },
+    ],
+    health: [
+      { label: 'Compliance score', value: 95, color: '#2e7d32' },
+      { label: 'Security posture', value: 92, color: '#1976d2' },
+      { label: 'Incident load', value: 28, color: '#f57c00' },
     ],
   },
 }
@@ -154,6 +187,20 @@ const PortalPage: NextPage = () => {
 
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
+            <Card sx={{ borderRadius: 4, boxShadow: '0 10px 24px rgba(15, 23, 42, 0.06)', mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Quick actions</Typography>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+                  {portal.quickActions.map((action) => (
+                    <Paper key={action.label} sx={{ flex: 1, p: 1.5, borderRadius: 3, bgcolor: '#f8fbff' }}>
+                      <Typography variant="subtitle2" fontWeight={700}>{action.label}</Typography>
+                      <Typography variant="body2" color="text.secondary">{action.hint}</Typography>
+                    </Paper>
+                  ))}
+                </Stack>
+              </CardContent>
+            </Card>
+
             <Card sx={{ borderRadius: 4, boxShadow: '0 10px 24px rgba(15, 23, 42, 0.06)' }}>
               <CardContent>
                 <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Today’s workflow queue</Typography>
@@ -172,7 +219,7 @@ const PortalPage: NextPage = () => {
           </Grid>
 
           <Grid item xs={12} lg={4}>
-            <Card sx={{ borderRadius: 4, boxShadow: '0 10px 24px rgba(15, 23, 42, 0.06)' }}>
+            <Card sx={{ borderRadius: 4, boxShadow: '0 10px 24px rgba(15, 23, 42, 0.06)', mb: 3 }}>
               <CardContent>
                 <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Portal highlights</Typography>
                 {portal.highlights.map((item) => (
@@ -180,6 +227,21 @@ const PortalPage: NextPage = () => {
                     <Typography variant="subtitle2" fontWeight={700}>{item.title}</Typography>
                     <Typography variant="body2" color="text.secondary">{item.description}</Typography>
                     <Divider sx={{ mt: 1.5 }} />
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card sx={{ borderRadius: 4, boxShadow: '0 10px 24px rgba(15, 23, 42, 0.06)' }}>
+              <CardContent>
+                <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>System health</Typography>
+                {portal.health.map((item) => (
+                  <Box key={item.label} sx={{ mb: 2 }}>
+                    <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5 }}>
+                      <Typography variant="body2">{item.label}</Typography>
+                      <Typography variant="body2" fontWeight={700}>{item.value}%</Typography>
+                    </Stack>
+                    <LinearProgress variant="determinate" value={item.value} sx={{ height: 8, borderRadius: 5, bgcolor: '#e9eef6', '& .MuiLinearProgress-bar': { bgcolor: item.color } }} />
                   </Box>
                 ))}
               </CardContent>
