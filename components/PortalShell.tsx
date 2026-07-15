@@ -98,6 +98,46 @@ const defaultMapLocations = [
   { name: 'North District', status: 'On route' },
 ]
 
+const roleAccessRoutes: Record<string, string[]> = {
+  Guest: ['/', '/customer-login', '/request-service', '/find-plumbers'],
+  Customer: ['/', '/customer-login', '/request-service', '/find-plumbers', '/customer-dashboard'],
+  Plumber: ['/', '/customer-login', '/request-service', '/find-plumbers', '/plumber-dashboard'],
+  'Service Manager': ['/', '/customer-login', '/request-service', '/find-plumbers', '/service-manager-dashboard'],
+  Partner: ['/', '/customer-login', '/request-service', '/find-plumbers', '/partner-portal'],
+  Admin: ['/', '/customer-login', '/request-service', '/find-plumbers', '/customer-dashboard', '/plumber-dashboard', '/partner-portal', '/service-manager-dashboard', '/admin-dashboard'],
+}
+
+const normalizeRole = (value?: string) => {
+  const roleValue = (value || 'Guest').toLowerCase()
+
+  if (roleValue.includes('admin') || roleValue.includes('administrator')) {
+    return 'Admin'
+  }
+
+  if (roleValue.includes('manager')) {
+    return 'Service Manager'
+  }
+
+  if (roleValue.includes('partner')) {
+    return 'Partner'
+  }
+
+  if (roleValue.includes('plumber')) {
+    return 'Plumber'
+  }
+
+  if (roleValue.includes('customer')) {
+    return 'Customer'
+  }
+
+  return 'Guest'
+}
+
+const canAccessRoute = (role: string, href: string) => {
+  const allowedRoutes = roleAccessRoutes[role] || roleAccessRoutes.Guest
+  return allowedRoutes.includes(href)
+}
+
 export default function PortalShell({
   title,
   subtitle,
@@ -148,6 +188,12 @@ export default function PortalShell({
     return `${session.name} • ${session.role}`
   }, [session])
 
+  const effectiveRole = useMemo(() => normalizeRole(session?.role || role), [role, session?.role])
+  const visibleMenuItems = useMemo(() => {
+    return (menuItems || defaultMenuItems).filter((item) => canAccessRoute(effectiveRole, item.href))
+  }, [effectiveRole, menuItems])
+  const isAllowedPage = canAccessRoute(effectiveRole, router.pathname)
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: '#0d1117', color: '#f0f6fc', display: 'flex', flexDirection: 'column' }}>
       <Paper sx={{ borderRadius: 0, bgcolor: '#161b22', borderBottom: '1px solid #30363d', position: 'sticky', top: 0, zIndex: 2, boxShadow: 'none' }}>
@@ -192,7 +238,7 @@ export default function PortalShell({
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1.5 }}>
                 <Box>
                   <Typography variant="overline" color="#58a6ff" fontWeight={700}>Role workspace</Typography>
-                  <Typography variant="h5" fontWeight={800} color="#f0f6fc">{isSidebarCollapsed ? 'Role' : role}</Typography>
+                  <Typography variant="h5" fontWeight={800} color="#f0f6fc">{isSidebarCollapsed ? 'Role' : effectiveRole}</Typography>
                 </Box>
                 <Button variant="outlined" size="small" onClick={() => setIsSidebarCollapsed((prev) => !prev)} sx={{ color: '#f0f6fc', borderColor: '#30363d' }}>
                   {isSidebarCollapsed ? '›' : '‹'}
@@ -202,7 +248,7 @@ export default function PortalShell({
               {!isSidebarCollapsed ? (
                 <>
                   <Stack spacing={1} sx={{ mt: 2 }}>
-                    {menuItems.map((item, index) => (
+                    {visibleMenuItems.map((item, index) => (
                       <Button
                         key={`${item.href}-${index}`}
                         component={Link}
@@ -255,7 +301,7 @@ export default function PortalShell({
                       {subtitle}
                     </Typography>
                   </Box>
-                  <Chip label={role} size="small" sx={{ bgcolor: '#1f6feb', color: '#fff' }} />
+                  <Chip label={effectiveRole} size="small" sx={{ bgcolor: '#1f6feb', color: '#fff' }} />
                 </Stack>
               </Paper>
 
@@ -398,6 +444,15 @@ export default function PortalShell({
                   </Stack>
                 </CardContent>
               </Card>
+
+              {!isAllowedPage ? (
+                <Paper sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
+                  <Typography variant="h6" fontWeight={700} color="#f0f6fc">Access restricted</Typography>
+                  <Typography variant="body2" color="#8b949e" sx={{ mt: 1 }}>
+                    This workspace is not available for {effectiveRole} users.
+                  </Typography>
+                </Paper>
+              ) : null}
 
               {children ? (
                 <Paper sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
