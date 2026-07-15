@@ -196,9 +196,9 @@ export default function PortalShell({
               {!isSidebarCollapsed ? (
                 <>
                   <Stack spacing={1} sx={{ mt: 2 }}>
-                    {menuItems.map((item) => (
+                    {menuItems.map((item, index) => (
                       <Button
-                        key={item.href}
+                        key={`${item.href}-${index}`}
                         component={Link}
                         href={item.href}
                         variant={active === item.label ? 'contained' : 'text'}
@@ -220,9 +220,9 @@ export default function PortalShell({
                 </>
               ) : (
                 <Stack spacing={1} sx={{ mt: 2 }}>
-                  {menuItems.map((item) => (
+                  {menuItems.map((item, index) => (
                     <Button
-                      key={item.href}
+                      key={`${item.href}-${index}`}
                       component={Link}
                       href={item.href}
                       variant={active === item.label ? 'contained' : 'text'}
