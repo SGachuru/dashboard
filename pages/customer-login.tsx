@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PortalShell from '../components/PortalShell'
 
 const roles = [
@@ -39,6 +39,25 @@ const CustomerLoginPage: NextPage = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', role: 'Customer' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const storedSession = window.localStorage.getItem('plumbpro-session')
+    if (storedSession) {
+      try {
+        const parsedSession = JSON.parse(storedSession) as { role?: string }
+        if (parsedSession.role) {
+          const destination = roleToPath[parsedSession.role] || '/customer-dashboard'
+          router.replace(destination)
+        }
+      } catch {
+        window.localStorage.removeItem('plumbpro-session')
+      }
+    }
+  }, [router])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
