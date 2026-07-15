@@ -71,6 +71,9 @@ const CustomerLoginPage: NextPage = () => {
       }
 
       const successMessage = payload?.message || `Welcome ${formData.name}. You are now signed in.`
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('plumbpro-session', JSON.stringify({ name: formData.name, role: formData.role }))
+      }
       setFeedback({ type: 'success', message: successMessage })
       window.setTimeout(() => {
         router.push(roleToPath[formData.role] || '/customer-dashboard')

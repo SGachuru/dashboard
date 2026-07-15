@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { useState, type ReactNode } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   Box,
   Button,
@@ -110,8 +111,41 @@ export default function PortalShell({
   mapLocations = defaultMapLocations,
   menuItems = defaultMenuItems,
 }: PortalShellProps) {
+  const router = useRouter()
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [session, setSession] = useState<{ name: string; role: string } | null>(null)
   const performanceBars = [42, 68, 54, 79, 74]
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const storedSession = window.localStorage.getItem('plumbpro-session')
+    if (storedSession) {
+      try {
+        setSession(JSON.parse(storedSession))
+      } catch {
+        window.localStorage.removeItem('plumbpro-session')
+      }
+    }
+  }, [])
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('plumbpro-session')
+    }
+    setSession(null)
+    router.push('/customer-login')
+  }
+
+  const currentUserLabel = useMemo(() => {
+    if (!session) {
+      return 'Guest'
+    }
+
+    return `${session.name} • ${session.role}`
+  }, [session])
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: '#f4f7fb', color: '#0f172a' }}>
@@ -128,13 +162,18 @@ export default function PortalShell({
               </Box>
             </Stack>
 
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: { xs: '100%', md: 'auto' } }}>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ width: { xs: '100%', md: 'auto' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
               <TextField size="small" placeholder="Search workspace" sx={{ minWidth: { xs: '100%', sm: 220 } }} />
               <Stack direction="row" spacing={1}>
                 <Button variant="outlined" size="small">🔔 3</Button>
                 <Button variant="outlined" size="small">💬 5</Button>
-                <Button variant="contained" size="small">Logout</Button>
+                <Button variant="contained" size="small" onClick={handleLogout}>
+                  {session ? 'Logout' : 'Login'}
+                </Button>
               </Stack>
+              <Typography variant="caption" color="text.secondary">
+                {currentUserLabel}
+              </Typography>
             </Stack>
           </Stack>
         </Container>
