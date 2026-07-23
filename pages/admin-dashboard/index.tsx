@@ -4,6 +4,10 @@ import {
   Card,
   CardContent,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   Stack,
   Table,
@@ -15,6 +19,7 @@ import {
   Typography
 } from '@mui/material'
 import type { NextPage } from 'next'
+import { useState } from 'react'
 import AdminDashboardShell from '../components/AdminDashboardShell'
 
 interface AdminTask {
@@ -35,6 +40,14 @@ const adminTasks: AdminTask[] = [
 ]
 
 const AdminDashboardPage: NextPage = () => {
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState({ title: '', owner: '', priority: 'Medium' })
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setOpen(false)
+  }
+
   const statusColor = (status: string) => {
     switch (status) {
       case 'Completed':
@@ -82,9 +95,14 @@ const AdminDashboardPage: NextPage = () => {
               <Typography variant="h6" fontWeight={700} color="#f8fafc">
                 Admin Operations
               </Typography>
-              <Button size="small" variant="outlined" sx={{ borderColor: '#334155', color: '#dc2626', fontWeight: 700, '&:hover': { borderColor: '#dc2626' } }}>
-                Escalate
-              </Button>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button size="small" variant="outlined" sx={{ borderColor: '#334155', color: '#dc2626', fontWeight: 700, '&:hover': { borderColor: '#dc2626' } }}>
+                  Escalate
+                </Button>
+                <Button size="small" variant="contained" sx={{ bgcolor: '#dc2626', color: '#fff', fontWeight: 700, '&:hover': { bgcolor: '#b91c1c' } }} onClick={() => setOpen(true)}>
+                  + New
+                </Button>
+              </Box>
             </Box>
             <TableContainer>
               <Table size="small">
@@ -207,8 +225,41 @@ const AdminDashboardPage: NextPage = () => {
           </Stack>
         </Grid>
       </Grid>
+
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: '#1e293b', border: '1px solid #334155' } }}>
+        <DialogTitle sx={{ color: '#f8fafc', fontWeight: 800 }}>New Admin Task</DialogTitle>
+        <Box component="form" onSubmit={handleSubmit}>
+          <DialogContent>
+            <Stack spacing={2}>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Title</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">{form.title || '—'}</Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Owner</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">{form.owner || '—'}</Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Priority</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">{form.priority}</Typography>
+                </Box>
+              </Box>
+            </Stack>
+          </DialogContent>
+          <DialogActions sx={{ p: 3, pt: 0 }}>
+            <Button onClick={() => setOpen(false)} sx={{ color: '#94a3b8' }}>Cancel</Button>
+            <Button type="submit" variant="contained" sx={{ bgcolor: '#dc2626', color: '#fff', fontWeight: 700, '&:hover': { bgcolor: '#b91c1c' } }}>Create task</Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </AdminDashboardShell>
   )
 }
 
 export default AdminDashboardPage
+

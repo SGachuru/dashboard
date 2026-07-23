@@ -57,10 +57,14 @@ const defaultStats: MetricItem[] = [
 
 const defaultMenuItems = [
   { label: 'Overview', href: '/admin-dashboard', icon: '📊' },
-  { label: 'Users', href: '/admin-dashboard', icon: '👥' },
-  { label: 'KYC Queue', href: '/admin-dashboard', icon: '🪪' },
-  { label: 'Disputes', href: '/admin-dashboard', icon: '⚖️' },
-  { label: 'Billing', href: '/admin-dashboard', icon: '💳' },
+  { label: 'Users', href: '/admin-dashboard/users', icon: '👥' },
+  { label: 'KYC Queue', href: '/admin-dashboard/kyc', icon: '🪪' },
+  { label: 'Disputes', href: '/admin-dashboard/disputes', icon: '⚖️' },
+  { label: 'Subscriptions', href: '/admin-dashboard/subscriptions', icon: '💳' },
+  { label: 'Ad Moderation', href: '/admin-dashboard/ads', icon: '📢' },
+  { label: 'Content', href: '/admin-dashboard/content', icon: '📄' },
+  { label: 'Analytics', href: '/admin-dashboard/analytics', icon: '📈' },
+  { label: 'Comms', href: '/admin-dashboard/communications', icon: '📣' },
   { label: 'Settings', href: '/admin-dashboard', icon: '⚙️' },
 ]
 
