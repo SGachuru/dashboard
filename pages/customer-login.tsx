@@ -119,6 +119,7 @@ const CustomerLoginPage: NextPage = () => {
     <PortalShell
       title="Customer Registration / Login"
       subtitle="Sign in with your name, phone number, and role to move into the matching operations workspace."
+      guest={false}
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>

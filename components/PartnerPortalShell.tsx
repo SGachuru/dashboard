@@ -57,10 +57,10 @@ const defaultStats: MetricItem[] = [
 
 const defaultMenuItems = [
   { label: 'Campaigns', href: '/partner-portal', icon: '📣' },
-  { label: 'Leads', href: '/partner-portal', icon: '🧲' },
-  { label: 'Offers', href: '/partner-portal', icon: '🎁' },
-  { label: 'Reporting', href: '/partner-portal', icon: '📈' },
-  { label: 'Settings', href: '/partner-portal', icon: '⚙️' },
+  { label: 'Leads', href: '/partner-portal/leads', icon: '🧲' },
+  { label: 'Offers', href: '/partner-portal/offers', icon: '🎁' },
+  { label: 'Billing', href: '/partner-portal/billing', icon: '💳' },
+  { label: 'Settings', href: '/partner-portal/registration', icon: '⚙️' },
 ]
 
 export default function PartnerPortalShell({
@@ -211,7 +211,6 @@ export default function PartnerPortalShell({
             alignItems: 'center',
             justifyContent: 'space-between',
             borderBottom: '1px solid #1e293b',
-            bgcolor: '#0f172a',
             position: 'sticky',
             top: 0,
             zIndex: 1000,

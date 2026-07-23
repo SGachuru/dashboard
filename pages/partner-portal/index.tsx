@@ -4,6 +4,10 @@ import {
   Card,
   CardContent,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   Stack,
   Table,
@@ -15,7 +19,8 @@ import {
   Typography
 } from '@mui/material'
 import type { NextPage } from 'next'
-import PartnerPortalShell from '../components/PartnerPortalShell'
+import { useState } from 'react'
+import PartnerPortalShell from '../../components/PartnerPortalShell'
 
 interface Campaign {
   id: string
@@ -34,10 +39,18 @@ const campaigns: Campaign[] = [
 ]
 
 const PartnerPortalPage: NextPage = () => {
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState({ name: '', type: 'Call action', location: 'Northside', segment: 'Customer' })
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setOpen(false)
+  }
+
   const statusColor = (status: string) => {
     switch (status) {
       case 'Running':
-        return { bg: '#d1fae5', color: '#065f46' }
+        return { bg: '#22c55e18', color: '#065f46' }
       case 'Pending':
         return { bg: '#fef3c7', color: '#92400e' }
       case 'Scheduled':
@@ -64,6 +77,9 @@ const PartnerPortalPage: NextPage = () => {
               </Typography>
               <Button size="small" variant="outlined" sx={{ borderColor: '#334155', color: '#7c3aed', fontWeight: 700, '&:hover': { borderColor: '#7c3aed' } }}>
                 Export
+              </Button>
+              <Button size="small" variant="contained" sx={{ bgcolor: '#7c3aed', color: '#fff', fontWeight: 700, '&:hover': { bgcolor: '#6d28d9' } }} onClick={() => setOpen(true)}>
+                + New Campaign
               </Button>
             </Box>
             <TableContainer>
@@ -182,6 +198,56 @@ const PartnerPortalPage: NextPage = () => {
           </Stack>
         </Grid>
       </Grid>
+
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: '#1e293b', border: '1px solid #334155' } }}>
+        <DialogTitle sx={{ color: '#f8fafc', fontWeight: 800 }}>New Campaign</DialogTitle>
+        <Box component="form" onSubmit={handleSubmit}>
+          <DialogContent>
+            <Stack spacing={2}>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Product name</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">{form.name || '—'}</Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Action type</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">{form.type}</Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Price</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">$0.00</Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Description</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5, minHeight: 64 }}>
+                  <Typography variant="body2" color="#94a3b8">Add a short description for the ad listing.</Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Target location</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">{form.location}</Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="#94a3b8" sx={{ mb: 0.5, display: 'block' }}>Target segment</Typography>
+                <Box sx={{ bgcolor: '#0f172a', border: '1px solid #334155', borderRadius: 2, px: 2, py: 1.5 }}>
+                  <Typography variant="body2" color="#f8fafc">{form.segment}</Typography>
+                </Box>
+              </Box>
+            </Stack>
+          </DialogContent>
+          <DialogActions sx={{ p: 3, pt: 0 }}>
+            <Button onClick={() => setOpen(false)} sx={{ color: '#94a3b8' }}>Cancel</Button>
+            <Button type="submit" variant="contained" sx={{ bgcolor: '#7c3aed', color: '#fff', fontWeight: 700, '&:hover': { bgcolor: '#6d28d9' } }}>Save campaign</Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </PartnerPortalShell>
   )
 }

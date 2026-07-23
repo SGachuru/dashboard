@@ -211,7 +211,6 @@ export default function ServiceManagerShell({
             alignItems: 'center',
             justifyContent: 'space-between',
             borderBottom: '1px solid #1e293b',
-            bgcolor: '#0f172a',
             position: 'sticky',
             top: 0,
             zIndex: 1000,
