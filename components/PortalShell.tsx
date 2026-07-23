@@ -1,25 +1,40 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   Container,
-  Grid,
+  IconButton,
+  InputBase,
+  List,
+  ListItem,
+  ListItemText,
   Paper,
   Stack,
-  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
+  useTheme
 } from '@mui/material'
+import type { NextPage } from 'next'
 
 interface MetricItem {
   label: string
   value: string
   trend: string
+  trendUp?: boolean
+  icon?: string
 }
 
 interface ChartData {
@@ -36,174 +51,46 @@ interface PortalShellProps {
   children?: ReactNode
   stats?: MetricItem[]
   chartData?: ChartData[]
-  tableRows?: Array<{ name: string; meta: string; status: string }>
+  tableRows?: Array<{ name: string; meta: string; status: string; amount?: string }>
   menuItems?: Array<{ label: string; href: string; icon: string }>
 }
 
 const defaultStats: MetricItem[] = [
-  { label: 'Total jobs', value: '248', trend: '+12%' },
-  { label: 'Revenue', value: '$18.4k', trend: '+8%' },
-  { label: 'Active users', value: '1,284', trend: '+6%' },
-  { label: 'Open tickets', value: '31', trend: '-3%' },
+  { label: 'Jobs today', value: '18', trend: '+6%', trendUp: true, icon: '🧰' },
+  { label: 'Revenue', value: '$9,841', trend: '+12%', trendUp: true, icon: '💰' },
+  { label: 'Customers', value: '1,284', trend: '+3%', trendUp: true, icon: '👥' },
+  { label: 'Open estimates', value: '31', trend: '-5%', trendUp: false, icon: '📋' },
 ]
 
-const defaultMenuItems = [
-  { label: 'Home', href: '/', icon: '🏠' },
-  { label: 'Login', href: '/customer-login', icon: '🔐' },
-  { label: 'Request Service', href: '/request-service', icon: '🛠️' },
-  { label: 'Find Plumbers', href: '/find-plumbers', icon: '📍' },
-  { label: 'Customer Dashboard', href: '/customer-dashboard', icon: '👤' },
-  { label: 'Plumber Dashboard', href: '/plumber-dashboard', icon: '🧰' },
-  { label: 'Partner Portal', href: '/partner-portal', icon: '🤝' },
-  { label: 'Service Manager', href: '/service-manager-dashboard', icon: '🧭' },
-  { label: 'Admin', href: '/admin-dashboard', icon: '⚙️' },
+const shellMenuItems = [
+  { label: 'Dashboard', href: '/', icon: '📊' },
+  { label: 'Jobs', href: '/', icon: '🔧' },
+  { label: 'Schedule', href: '/', icon: '📅' },
+  { label: 'Customers', href: '/', icon: '👥' },
+  { label: 'Estimates', href: '/', icon: '📝' },
+  { label: 'Invoices', href: '/', icon: '💳' },
+  { label: 'Reports', href: '/', icon: '📈' },
+  { label: 'Settings', href: '/', icon: '⚙️' },
 ]
-
-const roleAccessRoutes: Record<string, string[]> = {
-  Guest: ['/', '/customer-login', '/request-service', '/find-plumbers'],
-  Customer: ['/', '/customer-login', '/request-service', '/find-plumbers', '/customer-dashboard'],
-  Plumber: ['/', '/customer-login', '/request-service', '/find-plumbers', '/plumber-dashboard'],
-  'Service Manager': ['/', '/customer-login', '/request-service', '/find-plumbers', '/service-manager-dashboard'],
-  Partner: ['/', '/customer-login', '/request-service', '/find-plumbers', '/partner-portal'],
-  Admin: ['/', '/customer-login', '/request-service', '/find-plumbers', '/customer-dashboard', '/plumber-dashboard', '/partner-portal', '/service-manager-dashboard', '/admin-dashboard'],
-}
-
-const normalizeRole = (value?: string) => {
-  const roleValue = (value || 'Guest').toLowerCase()
-
-  if (roleValue.includes('admin') || roleValue.includes('administrator')) {
-    return 'Admin'
-  }
-
-  if (roleValue.includes('manager')) {
-    return 'Service Manager'
-  }
-
-  if (roleValue.includes('partner')) {
-    return 'Partner'
-  }
-
-  if (roleValue.includes('plumber')) {
-    return 'Plumber'
-  }
-
-  if (roleValue.includes('customer')) {
-    return 'Customer'
-  }
-
-  return 'Guest'
-}
-
-const canAccessRoute = (role: string, href: string) => {
-  const allowedRoutes = roleAccessRoutes[role] || roleAccessRoutes.Guest
-  return allowedRoutes.includes(href)
-}
-
-const InteractiveBarChart = ({ data = [] }: { data?: ChartData[] }) => {
-  const chartItems = data.length > 0 ? data : [
-    { label: 'Mon', value: 42, color: '#1f6feb' },
-    { label: 'Tue', value: 68, color: '#238636' },
-    { label: 'Wed', value: 54, color: '#1f6feb' },
-    { label: 'Thu', value: 79, color: '#238636' },
-    { label: 'Fri', value: 74, color: '#1f6feb' },
-  ]
-
-  return (
-    <Box sx={{ mt: 1 }}>
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} alignItems="flex-end">
-        {chartItems.map((item, index) => (
-          <Box key={item.label} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Box
-              sx={{
-                width: '100%',
-                height: 120,
-                borderRadius: 2,
-                bgcolor: '#0d1117',
-                border: '1px solid #30363d',
-                display: 'flex',
-                alignItems: 'flex-end',
-                p: 1,
-                transition: 'all 0.2s ease',
-                '&:hover': { borderColor: '#1f6feb' },
-              }}
-            >
-              <Box
-                sx={{
-                  width: '100%',
-                  height: `${Math.min(100, item.value)}%`,
-                  borderRadius: 1.5,
-                  bgcolor: item.color || '#1f6feb',
-                  transition: 'height 0.3s ease',
-                }}
-              />
-            </Box>
-            <Typography variant="caption" color="#8b949e" sx={{ mt: 1 }}>{item.label}</Typography>
-          </Box>
-        ))}
-      </Stack>
-    </Box>
-  )
-}
-
-const InteractivePieChart = ({ data = [] }: { data?: ChartData[] }) => {
-  const pieData = data.length > 0 ? data : [
-    { label: 'Jobs', value: 45, color: '#1f6feb' },
-    { label: 'Revenue', value: 35, color: '#238feb' },
-    { label: 'Users', value: 20, color: '#2ea043' },
-  ]
-
-  const total = pieData.reduce((sum, item) => sum + item.value, 0)
-  let cumulativeAngle = 0
-
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-      <Box sx={{ position: 'relative', width: 120, height: 120 }}>
-        <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '50%',
-            background: `conic-gradient(${pieData.map(item => {
-              const start = cumulativeAngle
-              cumulativeAngle += (item.value / total) * 360
-              return `${item.color || '#1f6feb'} ${start}deg ${cumulativeAngle}deg`
-            }).join(', ')})`,
-            transition: 'all 0.3s ease',
-            '&:hover': { transform: 'scale(1.05)' },
-          }}
-        />
-      </Box>
-      <Stack spacing={0.75}>
-        {pieData.map((item) => (
-          <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: item.color || '#1f6feb' }} />
-            <Typography variant="body2" color="#f0f6fc">{item.label}</Typography>
-          </Box>
-        ))}
-      </Stack>
-    </Box>
-  )
-}
 
 export default function PortalShell({
   title,
   subtitle,
-  active = '',
-  role = 'Operations',
+  active = 'Dashboard',
+  role = 'Guest',
   children,
   stats = defaultStats,
   chartData,
   tableRows,
-  menuItems = defaultMenuItems,
+  menuItems = shellMenuItems,
 }: PortalShellProps) {
-  const router = useRouter()
+  const theme = useTheme()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [session, setSession] = useState<{ name: string; role: string } | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
+    if (typeof window === 'undefined') return
     const storedSession = window.localStorage.getItem('plumbpro-session')
     if (storedSession) {
       try {
@@ -215,162 +102,316 @@ export default function PortalShell({
   }, [])
 
   const handleLogout = () => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('plumbpro-session')
-    }
+    if (typeof window !== 'undefined') window.localStorage.removeItem('plumbpro-session')
     setSession(null)
     router.push('/customer-login')
   }
 
-  const currentUserLabel = useMemo(() => {
-    if (!session) {
-      return 'Guest'
+  const statusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return { bg: '#22c55e18', color: '#22c55e', border: '#22c55e' }
+      case 'in progress':
+      case 'live':
+      case 'running':
+        return { bg: '#3b82f618', color: '#3b82f6', border: '#3b82f6' }
+      case 'scheduled':
+        return { bg: '#f59e0b18', color: '#f59e0b', border: '#f59e0b' }
+      case 'pending':
+        return { bg: '#94a3b818', color: '#94a3b8', border: '#94a3b8' }
+      case 'action needed':
+        return { bg: '#ef444418', color: '#ef4444', border: '#ef4444' }
+      default:
+        return { bg: '#94a3b818', color: '#94a3b8', border: '#94a3b8' }
     }
-    return `${session.name} • ${session.role}`
-  }, [session])
+  }
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#0d1117', color: '#f0f6fc', display: 'flex', flexDirection: 'column' }}>
-      <Paper sx={{ borderRadius: 0, bgcolor: '#161b22', borderBottom: '1px solid #30363d', position: 'sticky', top: 0, zIndex: 2, boxShadow: 'none' }}>
-        <Container maxWidth="xl">
-          <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }} spacing={2} sx={{ py: 2 }}>
-            <Stack direction="row" alignItems="center" spacing={1.5}>
-              <Box sx={{ width: 44, height: 44, borderRadius: 2.5, bgcolor: '#238636', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800 }}>
-                PP
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#0f172a' }}>
+      <Paper
+        elevation={0}
+        sx={{
+          width: isSidebarOpen ? 260 : 72,
+          minHeight: '100vh',
+          bgcolor: '#020617',
+          borderRight: '1px solid #1e293b',
+          display: 'flex',
+          flexDirection: 'column',
+          transition: 'width 0.2s ease',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          zIndex: 1100,
+        }}
+      >
+        <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'space-between' : 'center' }}>
+          {isSidebarOpen && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ width: 36, height: 36, borderRadius: 2, bgcolor: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '1rem' }}>
+                ST
               </Box>
               <Box>
-                <Typography variant="h6" fontWeight={800} color="#f0f6fc">PlumbPro Portal</Typography>
-                <Typography variant="body2" color="#8b949e">Unified operations workspace</Typography>
+                <Typography variant="subtitle1" fontWeight={800} color="#f8fafc" sx={{ lineHeight: 1.1 }}>
+                  Servio
+                </Typography>
+                <Typography variant="caption" color="#64748b" sx={{ display: 'block' }}>
+                  Field Management
+                </Typography>
               </Box>
-            </Stack>
+            </Box>
+          )}
+          {!isSidebarOpen && (
+            <Box sx={{ width: 36, height: 36, borderRadius: 2, bgcolor: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '0.85rem' }}>
+              ST
+            </Box>
+          )}
+        </Box>
 
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ width: { xs: '100%', md: 'auto' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
-              <TextField size="small" placeholder="Search workspace" sx={{ minWidth: { xs: '100%', sm: 220 }, '& .MuiOutlinedInput-root': { bgcolor: '#0d1117', color: '#f0f6fc', borderColor: '#30363d' } }} />
-              <Stack direction="row" alignItems="center" spacing={1.25}>
-                <Avatar sx={{ width: 32, height: 32, bgcolor: '#1f6feb', fontSize: '0.9rem' }}>{session?.name?.[0] || 'U'}</Avatar>
-                <Box>
-                  <Typography variant="caption" color="#f0f6fc" fontWeight={700}>{session?.name || 'User Profile'}</Typography>
-                  <Typography variant="caption" color="#8b949e" display="block">{currentUserLabel}</Typography>
+        <Stack spacing={0.5} sx={{ px: 1.5, mt: 1 }}>
+          {menuItems.map((item) => {
+            const isActive = active === item.label
+            return (
+              <Box
+                key={item.label}
+                component={Link}
+                href={item.href}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                  px: isSidebarOpen ? 2 : 1.5,
+                  py: 1.25,
+                  borderRadius: 2,
+                  textDecoration: 'none',
+                  color: isActive ? '#f8fafc' : '#94a3b8',
+                  bgcolor: isActive ? '#1e293b' : 'transparent',
+                  borderLeft: isActive ? '3px solid #f59e0b' : '3px solid transparent',
+                  transition: 'all 0.15s ease',
+                  '&:hover': {
+                    bgcolor: isActive ? '#1e293b' : '#1e293b80',
+                    color: '#f8fafc',
+                  },
+                }}
+              >
+                <Box component="span" sx={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24 }}>
+                  {item.icon}
                 </Box>
-                <Button variant="contained" size="small" onClick={handleLogout} sx={{ bgcolor: '#238636', '&:hover': { bgcolor: '#2ea043' } }}>
-                  {session ? 'Logout' : 'Login'}
+                {isSidebarOpen && (
+                  <Typography variant="body2" fontWeight={isActive ? 700 : 400} sx={{ whiteSpace: 'nowrap' }}>
+                    {item.label}
+                  </Typography>
+                )}
+              </Box>
+            )
+          })}
+        </Stack>
+
+        <Box sx={{ mt: 'auto', px: 1.5, pb: 2 }}>
+          {isSidebarOpen ? (
+            <Card sx={{ bgcolor: '#1e293b', border: '1px solid #334155', borderRadius: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Typography variant="caption" color="#94a3b8" sx={{ display: 'block', mb: 0.5 }}>
+                  Workspace
+                </Typography>
+                <Typography variant="subtitle2" fontWeight={700} color="#f8fafc">
+                  {session?.name || 'PlumbPro'}
+                </Typography>
+                <Typography variant="caption" color="#64748b" sx={{ display: 'block' }}>
+                  {session?.role || role}
+                </Typography>
+                <Button size="small" variant="outlined" sx={{ mt: 1.5, width: '100%', borderColor: '#334155', color: '#94a3b8', '&:hover': { borderColor: '#64748b', color: '#f8fafc' } }} onClick={handleLogout}>
+                  Sign out
                 </Button>
-              </Stack>
-            </Stack>
-          </Stack>
-        </Container>
-      </Paper>
-
-      <Container maxWidth="xl" sx={{ py: { xs: 3, md: 4 }, flex: 1 }}>
-        <Stack spacing={3}>
-          <Paper sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-            <Typography variant="overline" color="#58a6ff" fontWeight={700}>Portal section</Typography>
-            <Typography variant="h3" fontWeight={800} color="#f0f6fc">{title}</Typography>
-            <Typography variant="body1" color="#8b949e" sx={{ mt: 1, maxWidth: 760 }}>
-              {subtitle}
-            </Typography>
-          </Paper>
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-                <CardContent>
-                  <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Quick stats</Typography>
-                  <Grid container spacing={2}>
-                    {stats.slice(0, 2).map((stat) => (
-                      <Grid item xs={6} key={stat.label}>
-                        <Box component={Link} href={`/${stat.label.toLowerCase().replace(/\s+/g, '-')}`} sx={{ textDecoration: 'none' }}>
-                          <Box
-                            sx={{
-                              p: 1.5,
-                              borderRadius: 2,
-                              bgcolor: '#0d1117',
-                              border: '1px solid #30363d',
-                              transition: 'all 0.2s ease',
-                              '&:hover': { borderColor: '#1f6feb', cursor: 'pointer' },
-                            }}
-                          >
-                            <Typography variant="body2" color="#8b949e">{stat.label}</Typography>
-                            <Typography variant="h5" fontWeight={800} color="#f0f6fc">{stat.value}</Typography>
-                            <Chip label={stat.trend} size="small" sx={{ mt: 0.5, bgcolor: '#1f6feb', color: '#fff' }} />
-                          </Box>
-                        </Box>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Card sx={{ borderRadius: 4, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-                <CardContent>
-                  <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Data distribution</Typography>
-                  <InteractivePieChart data={chartData} />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-
-          <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-            <CardContent>
-              <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Performance overview</Typography>
-              <InteractiveBarChart data={chartData} />
-            </CardContent>
-          </Card>
-
-          {tableRows && tableRows.length > 0 ? (
-            <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-              <CardContent>
-                <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Recent activity</Typography>
-                <Stack spacing={1}>
-                  {tableRows.map((row, index) => (
-                    <Box key={row.name} component={Link} href="/customer-dashboard" sx={{ textDecoration: 'none' }}>
-                      <Box
-                        sx={{
-                          p: 1.25,
-                          borderRadius: 2,
-                          bgcolor: '#0d1117',
-                          border: '1px solid #30363d',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          transition: 'all 0.2s ease',
-                          '&:hover': { bgcolor: '#21262d', cursor: 'pointer' },
-                        }}
-                      >
-                        <Box>
-                          <Typography variant="body2" fontWeight={700} color="#f0f6fc">{row.name}</Typography>
-                          <Typography variant="caption" color="#8b949e">{row.meta}</Typography>
-                        </Box>
-                        <Chip label={row.status} size="small" sx={{ bgcolor: row.status === 'Urgent' ? '#da3633' : '#30363d', color: '#fff' }} />
-                      </Box>
-                    </Box>
-                  ))}
-                </Stack>
               </CardContent>
             </Card>
-          ) : null}
+          ) : (
+            <Button size="small" variant="text" sx={{ color: '#64748b', minWidth: 'auto', p: 1 }} onClick={handleLogout}>
+              ⎋
+            </Button>
+          )}
+        </Box>
+      </Paper>
 
-          {children ? (
-            <Paper sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
-              {children}
-            </Paper>
-          ) : null}
-        </Stack>
-      </Container>
+      <Box sx={{ flex: 1, ml: `${isSidebarOpen ? 260 : 72}px`, transition: 'margin 0.2s ease', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Paper
+          elevation={0}
+          sx={{
+            px: 3,
+            py: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid #1e293b',
+            bgcolor: '#0f172a',
+            position: 'sticky',
+            top: 0,
+            zIndex: 1000,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+            <IconButton size="small" sx={{ color: '#94a3b8' }} onClick={() => setIsSidebarOpen((prev) => !prev)}>
+              {isSidebarOpen ? '◂' : '▸'}
+            </IconButton>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: '#1e293b', borderRadius: 2, px: 2, py: 0.75, maxWidth: 420, flex: 1 }}>
+              <Box component="span" sx={{ color: '#64748b', fontSize: '1rem' }}>🔍</Box>
+              <InputBase placeholder="Search jobs, customers, estimates..." sx={{ color: '#f8fafc', width: '100%', '& .MuiInputBase-input::placeholder': { color: '#64748b', opacity: 1 } }} />
+            </Box>
+          </Box>
 
-      <Box component="footer" sx={{ mt: 'auto', borderTop: '1px solid #30363d', bgcolor: '#0d1117' }}>
-        <Container maxWidth="xl" sx={{ py: 2.25 }}>
-          <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={1.5}>
-            <Stack direction="row" spacing={2} flexWrap="wrap">
-              <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#8b949e', px: 0, minWidth: 'auto' }}>Privacy</Button>
-              <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#8b949e', px: 0, minWidth: 'auto' }}>Terms</Button>
-              <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#8b949e', px: 0, minWidth: 'auto' }}>Support</Button>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <IconButton size="small" sx={{ color: '#94a3b8', bgcolor: '#1e293b' }}>
+              <Badge badgeContent={3} color="error">
+                <Box component="span" sx={{ fontSize: '1.1rem' }}>🔔</Box>
+              </Badge>
+            </IconButton>
+            <Avatar sx={{ width: 36, height: 36, bgcolor: '#f59e0b', fontSize: '0.9rem', fontWeight: 700 }}>
+              {session?.name?.[0] || 'U'}
+            </Avatar>
+          </Stack>
+        </Paper>
+
+        <Container maxWidth="xl" sx={{ py: 4, flex: 1 }}>
+          <Stack spacing={4}>
+            <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }} spacing={2}>
+              <Box>
+                <Chip label={`${role} workspace`} size="small" sx={{ bgcolor: '#f59e0b18', color: '#f59e0b', fontWeight: 700, mb: 1.5 }} />
+                <Typography variant="h3" fontWeight={800} color="#f8fafc" sx={{ letterSpacing: '-0.02em' }}>
+                  {title}
+                </Typography>
+                <Typography variant="body1" color="#94a3b8" sx={{ mt: 0.5, maxWidth: 640 }}>
+                  {subtitle}
+                </Typography>
+              </Box>
+              <Button variant="contained" sx={{ bgcolor: '#f59e0b', color: '#fff', fontWeight: 700, px: 3, '&:hover': { bgcolor: '#d97706' } }}>
+                + New Job
+              </Button>
             </Stack>
-            <Typography variant="caption" color="#8b949e">Version 1.0.0</Typography>
+
+            <Grid container spacing={2.5}>
+              {(stats || defaultStats).map((stat) => {
+                const sc = statusColor(stat.trendUp === false ? 'pending' : 'live')
+                return (
+                  <Grid item xs={12} sm={6} md={3} key={stat.label}>
+                    <Card sx={{ borderRadius: 3, bgcolor: '#1e293b', border: '1px solid #334155', boxShadow: 'none', '&:hover': { borderColor: '#475569' } }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                          <Box>
+                            <Typography variant="caption" color="#94a3b8" sx={{ display: 'block', mb: 0.75 }}>
+                              {stat.label}
+                            </Typography>
+                            <Typography variant="h4" fontWeight={800} color="#f8fafc" sx={{ letterSpacing: '-0.02em' }}>
+                              {stat.value}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: '#0f172a', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem' }}>
+                            {stat.icon}
+                          </Box>
+                        </Stack>
+                        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 1.5 }}>
+                          <Chip
+                            label={stat.trend}
+                            size="small"
+                            sx={{
+                              bgcolor: `${sc.color}18`,
+                              color: sc.color,
+                              fontWeight: 700,
+                              fontSize: '0.7rem',
+                              height: 20,
+                              '& .MuiChip-label': { px: 0.75 },
+                            }}
+                          />
+                          <Typography variant="caption" color="#64748b">
+                            vs last month
+                          </Typography>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )
+              })}
+            </Grid>
+
+            {children}
+
+            {tableRows && tableRows.length > 0 && (
+              <Card sx={{ borderRadius: 3, bgcolor: '#1e293b', border: '1px solid #334155', boxShadow: 'none', overflow: 'hidden' }}>
+                <Box sx={{ p: 3, pb: 2, borderBottom: '1px solid #334155' }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h6" fontWeight={700} color="#f8fafc">
+                      Recent Activity
+                    </Typography>
+                    <Button size="small" variant="text" sx={{ color: '#f59e0b', fontWeight: 600 }}>
+                      View all
+                    </Button>
+                  </Stack>
+                </Box>
+                <TableContainer>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow sx={{ bgcolor: '#0f172a' }}>
+                        <TableCell sx={{ color: '#94a3b8', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #334155' }}>
+                          Job
+                        </TableCell>
+                        <TableCell sx={{ color: '#94a3b8', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #334155' }}>
+                          Customer
+                        </TableCell>
+                        <TableCell sx={{ color: '#94a3b8', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #334155' }}>
+                          Status
+                        </TableCell>
+                        <TableCell sx={{ color: '#94a3b8', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #334155', textAlign: 'right' }}>
+                          Amount
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tableRows.map((row, index) => {
+                        const sc = statusColor(row.status)
+                        return (
+                          <TableRow key={row.name} sx={{ '&:hover': { bgcolor: '#33415520' }, transition: 'background 0.15s' }}>
+                            <TableCell sx={{ color: '#f8fafc', fontWeight: 600, borderBottom: '1px solid #1e293b' }}>{row.name}</TableCell>
+                            <TableCell sx={{ color: '#94a3b8', borderBottom: '1px solid #1e293b' }}>{row.meta}</TableCell>
+                            <TableCell sx={{ borderBottom: '1px solid #1e293b' }}>
+                              <Chip
+                                label={row.status}
+                                size="small"
+                                sx={{
+                                  bgcolor: `${sc.color}18`,
+                                  color: sc.color,
+                                  fontWeight: 600,
+                                  fontSize: '0.7rem',
+                                  height: 22,
+                                  border: `1px solid ${sc.color}40`,
+                                  '& .MuiChip-label': { px: 0.75 },
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell sx={{ color: '#f8fafc', fontWeight: 700, borderBottom: '1px solid #1e293b', textAlign: 'right' }}>
+                              {row.amount}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Card>
+            )}
           </Stack>
         </Container>
+
+        <Box component="footer" sx={{ borderTop: '1px solid #1e293b', bgcolor: '#0f172a', py: 2.5, mt: 'auto' }}>
+          <Container maxWidth="xl">
+            <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={1.5}>
+              <Stack direction="row" spacing={3}>
+                <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#64748b', px: 0, minWidth: 'auto', textTransform: 'none' }}>Privacy</Button>
+                <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#64748b', px: 0, minWidth: 'auto', textTransform: 'none' }}>Terms</Button>
+                <Button component={Link} href="/" variant="text" size="small" sx={{ color: '#64748b', px: 0, minWidth: 'auto', textTransform: 'none' }}>Support</Button>
+              </Stack>
+              <Typography variant="caption" color="#475569">PlumbPro v2.4.1</Typography>
+            </Stack>
+          </Container>
+        </Box>
       </Box>
     </Box>
   )
