@@ -216,15 +216,79 @@ export default function AdminDashboardShell({
               <Grid container spacing={2}>
                 {stats.map((stat, index) => (
                   <Grid item xs={12} sm={6} lg={3} key={stat.label}>
-                    <Card sx={{ borderRadius: 3, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none', '&:hover': { borderColor: '#1f6feb' } }}>
-                      <CardContent>
-                        <Typography variant="body2" color="#8b949e">{stat.label}</Typography>
-                        <Typography variant="h5" fontWeight={800} color="#f0f6fc" sx={{ mt: 0.5 }}>{stat.value}</Typography>
-                        <Chip label={stat.trend} size="small" sx={{ mt: 1, bgcolor: '#238636', color: '#fff' }} />
-                      </CardContent>
-                    </Card>
+                    <Box component={Link} href="/admin-dashboard" sx={{ textDecoration: 'none' }}>
+                      <Card sx={{ borderRadius: 3, height: '100%', bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none', '&:hover': { borderColor: '#1f6feb', cursor: 'pointer' } }}>
+                        <CardContent>
+                          <Typography variant="body2" color="#8b949e">{stat.label}</Typography>
+                          <Typography variant="h5" fontWeight={800} color="#f0f6fc" sx={{ mt: 0.5 }}>{stat.value}</Typography>
+                          <Chip label={stat.trend} size="small" sx={{ mt: 1, bgcolor: '#238636', color: '#fff' }} />
+                        </CardContent>
+                      </Card>
+                    </Box>
                   </Grid>
                 ))}
+              </Grid>
+
+              <Card sx={{ borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d', boxShadow: 'none' }}>
+                <CardContent>
+                  <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 2 }}>Platform analytics</Typography>
+                  <Box sx={{ mt: 1 }}>
+                    <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} alignItems="flex-end">
+                      {[
+                        { label: 'Jan', value: 62, color: '#1f6feb' },
+                        { label: 'Feb', value: 68, color: '#238636' },
+                        { label: 'Mar', value: 74, color: '#1f6feb' },
+                        { label: 'Apr', value: 79, color: '#238636' },
+                        { label: 'May', value: 74, color: '#1f6feb' },
+                      ].map((item) => (
+                        <Box key={item.label} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <Box
+                            sx={{
+                              width: '100%',
+                              height: 100,
+                              borderRadius: 2,
+                              bgcolor: '#0d1117',
+                              border: '1px solid #30363d',
+                              display: 'flex',
+                              alignItems: 'flex-end',
+                              p: 1,
+                              transition: 'all 0.2s ease',
+                              '&:hover': { borderColor: '#1f6feb', cursor: 'pointer' },
+                            }}
+                          >
+                            <Box sx={{ width: '100%', height: `${item.value}%`, borderRadius: 1.5, bgcolor: item.color }} />
+                          </Box>
+                          <Typography variant="caption" color="#8b949e" sx={{ mt: 1 }}>{item.label}</Typography>
+                        </Box>
+                      ))}
+                    </Stack>
+                  </Box>
+                </CardContent>
+              </Card>
+
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ p: 2.5, borderRadius: 4, bgcolor: '#161b22', border: '1px solid #30363d' }}>
+                    <Typography variant="h6" fontWeight={700} color="#f0f6fc" sx={{ mb: 1.5 }}>Data distribution</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <Box sx={{ width: 100, height: 100, borderRadius: '50%', background: 'conic-gradient(#1f6feb 0deg 162deg, #238636 162deg 270deg, #da3633 270deg 360deg)' }} />
+                      <Stack spacing={0.75}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#1f6feb' }} />
+                          <Typography variant="body2" color="#f0f6fc">Users</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#238636' }} />
+                          <Typography variant="body2" color="#f0f6fc">Revenue</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#da3633' }} />
+                          <Typography variant="body2" color="#f0f6fc">Issues</Typography>
+                        </Box>
+                      </Stack>
+                    </Box>
+                  </Box>
+                </Grid>
               </Grid>
 
               {children ? (

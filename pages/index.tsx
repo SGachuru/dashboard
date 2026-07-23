@@ -35,6 +35,20 @@ const HomePage: NextPage = () => {
     <PortalShell
       title="A cleaner, modern portal for plumbing operations"
       subtitle="Bring customers, plumbers, partners, and internal teams into one polished experience that feels simple, trusted, and ready for growth."
+      active="Home"
+      stats={[
+        { label: 'Total jobs', value: '248', trend: '+12%' },
+        { label: 'Revenue', value: '$18.4k', trend: '+8%' },
+      ]}
+      chartData={[
+        { label: 'Jobs', value: 45, color: '#1f6feb' },
+        { label: 'Revenue', value: 35, color: '#2ea043' },
+        { label: 'Users', value: 20, color: '#da3633' },
+      ]}
+      tableRows={[
+        { name: 'Leak repair', meta: 'North District • Today', status: 'In progress' },
+        { name: 'Water heater install', meta: 'West Loop • Tomorrow', status: 'Scheduled' },
+      ]}
     >
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
