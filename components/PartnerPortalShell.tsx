@@ -93,18 +93,20 @@ export default function PartnerPortalShell({
     router.push('/customer-login')
   }
 
+  const sidebarWidth = isSidebarOpen ? 256 : 72
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#0f172a' }}>
       <Paper
         elevation={0}
         sx={{
-          width: isSidebarOpen ? 260 : 72,
+          width: sidebarWidth,
           minHeight: '100vh',
           bgcolor: '#020617',
           borderRight: '1px solid #1e293b',
           display: 'flex',
           flexDirection: 'column',
-          transition: 'width 0.2s ease',
+          transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
           position: 'fixed',
           left: 0,
           top: 0,
@@ -112,17 +114,17 @@ export default function PartnerPortalShell({
           zIndex: 1100,
         }}
       >
-        <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'space-between' : 'center' }}>
+        <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'space-between' : 'center', minHeight: 72 }}>
           {isSidebarOpen ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 36, height: 36, borderRadius: 2, bgcolor: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '0.8rem' }}>
+              <Box sx={{ width: 36, height: 36, borderRadius: 2, bgcolor: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '0.8rem', flexShrink: 0 }}>
                 PP
               </Box>
-              <Box>
-                <Typography variant="subtitle1" fontWeight={800} color="#f8fafc" sx={{ lineHeight: 1.1 }}>
+              <Box sx={{ overflow: 'hidden' }}>
+                <Typography variant="subtitle1" fontWeight={800} color="#f8fafc" sx={{ lineHeight: 1.1, whiteSpace: 'nowrap' }}>
                   PlumbPro
                 </Typography>
-                <Typography variant="caption" color="#64748b" sx={{ display: 'block' }}>
+                <Typography variant="caption" color="#64748b" sx={{ display: 'block', whiteSpace: 'nowrap' }}>
                   Partner network
                 </Typography>
               </Box>
@@ -134,7 +136,7 @@ export default function PartnerPortalShell({
           )}
         </Box>
 
-        <Stack spacing={0.5} sx={{ px: 1.5, mt: 1 }}>
+        <Stack spacing={0.5} sx={{ px: 1.5, mt: 0.5, flex: 1, overflowY: 'auto' }}>
           {menuItems.map((item) => {
             const isActive = active === item.label
             return (
@@ -146,7 +148,7 @@ export default function PartnerPortalShell({
                   display: 'flex',
                   alignItems: 'center',
                   gap: 2,
-                  px: isSidebarOpen ? 2 : 1.5,
+                  px: isSidebarOpen ? 2 : 1.25,
                   py: 1.25,
                   borderRadius: 2,
                   textDecoration: 'none',
@@ -160,11 +162,11 @@ export default function PartnerPortalShell({
                   },
                 }}
               >
-                <Box component="span" sx={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24 }}>
+                <Box component="span" sx={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24, flexShrink: 0 }}>
                   {item.icon}
                 </Box>
                 {isSidebarOpen && (
-                  <Typography variant="body2" fontWeight={isActive ? 700 : 400} sx={{ whiteSpace: 'nowrap' }}>
+                  <Typography variant="body2" fontWeight={isActive ? 700 : 400} sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {item.label}
                   </Typography>
                 )}
@@ -173,14 +175,14 @@ export default function PartnerPortalShell({
           })}
         </Stack>
 
-        <Box sx={{ mt: 'auto', px: 1.5, pb: 2 }}>
+        <Box sx={{ px: 1.5, pb: 2, pt: 1 }}>
           {isSidebarOpen ? (
             <Card sx={{ bgcolor: '#1e293b', border: '1px solid #334155', borderRadius: 2 }}>
               <CardContent sx={{ p: 2 }}>
                 <Typography variant="caption" color="#94a3b8" sx={{ display: 'block', mb: 0.5 }}>
                   Signed in as
                 </Typography>
-                <Typography variant="subtitle2" fontWeight={700} color="#f8fafc">
+                <Typography variant="subtitle2" fontWeight={700} color="#f8fafc" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {session?.name || 'Partner Profile'}
                 </Typography>
                 <Typography variant="caption" color="#64748b" sx={{ display: 'block' }}>
@@ -192,14 +194,14 @@ export default function PartnerPortalShell({
               </CardContent>
             </Card>
           ) : (
-            <Button size="small" variant="text" sx={{ color: '#64748b', minWidth: 'auto', p: 1 }} onClick={handleLogout}>
+            <Button size="small" variant="text" sx={{ color: '#64748b', minWidth: 'auto', p: 1, width: '100%', justifyContent: 'center' }} onClick={handleLogout}>
               ⎋
             </Button>
           )}
         </Box>
       </Paper>
 
-      <Box sx={{ flex: 1, ml: `${isSidebarOpen ? 260 : 72}px`, transition: 'margin 0.2s ease', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flex: 1, ml: `${sidebarWidth}px`, transition: 'margin 0.25s cubic-bezier(0.4, 0, 0.2, 1)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Paper
           elevation={0}
           sx={{
@@ -213,20 +215,22 @@ export default function PartnerPortalShell({
             position: 'sticky',
             top: 0,
             zIndex: 1000,
+            backdropFilter: 'blur(8px)',
+            bgcolor: 'rgba(15, 23, 42, 0.8)',
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
             <IconButton size="small" sx={{ color: '#94a3b8' }} onClick={() => setIsSidebarOpen((prev) => !prev)}>
               {isSidebarOpen ? '◂' : '▸'}
             </IconButton>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: '#1e293b', borderRadius: 2, px: 2, py: 0.75, maxWidth: 420, flex: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: '#1e293b', borderRadius: 2, px: 2, py: 0.75, maxWidth: 420, flex: 1, border: '1px solid #334155' }}>
               <Box component="span" sx={{ color: '#64748b', fontSize: '1rem' }}>🔍</Box>
               <InputBase placeholder="Search campaigns, leads..." sx={{ color: '#f8fafc', width: '100%', '& .MuiInputBase-input::placeholder': { color: '#64748b', opacity: 1 } }} />
             </Box>
           </Box>
 
           <Stack direction="row" spacing={1} alignItems="center">
-            <IconButton size="small" sx={{ color: '#94a3b8', bgcolor: '#1e293b' }}>
+            <IconButton size="small" sx={{ color: '#94a3b8', bgcolor: '#1e293b', border: '1px solid #334155' }}>
               <Badge badgeContent={2} color="error">
                 <Box component="span" sx={{ fontSize: '1.1rem' }}>🔔</Box>
               </Badge>
@@ -255,30 +259,47 @@ export default function PartnerPortalShell({
             </Stack>
 
             <Grid container spacing={2.5}>
-              {(stats || defaultStats).map((stat) => (
-                <Grid item xs={12} sm={6} md={3} key={stat.label}>
-                  <Card sx={{ borderRadius: 3, bgcolor: '#1e293b', border: '1px solid #334155', boxShadow: 'none', '&:hover': { borderColor: '#475569' } }}>
-                    <CardContent>
-                      <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-                        <Box>
-                          <Typography variant="caption" color="#94a3b8" sx={{ display: 'block', mb: 0.75 }}>
-                            {stat.label}
+              {(stats || defaultStats).map((stat) => {
+                const sc = { bg: '#22c55e18', color: '#22c55e' }
+                return (
+                  <Grid item xs={12} sm={6} md={3} key={stat.label}>
+                    <Card sx={{ borderRadius: 3, bgcolor: '#1e293b', border: '1px solid #334155', boxShadow: 'none', transition: 'all 0.2s ease', '&:hover': { borderColor: '#475569', transform: 'translateY(-2px)' } }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1.5 }}>
+                          <Box>
+                            <Typography variant="caption" color="#94a3b8" sx={{ display: 'block', mb: 0.75, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                              {stat.label}
+                            </Typography>
+                            <Typography variant="h4" fontWeight={800} color="#f8fafc" sx={{ letterSpacing: '-0.02em' }}>
+                              {stat.value}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ width: 44, height: 44, borderRadius: 2, bgcolor: '#0f172a', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem' }}>
+                            {stat.icon}
+                          </Box>
+                        </Stack>
+                        <Stack direction="row" spacing={0.75} alignItems="center">
+                          <Chip
+                            label={stat.trend}
+                            size="small"
+                            sx={{
+                              bgcolor: `${sc.color}18`,
+                              color: sc.color,
+                              fontWeight: 700,
+                              fontSize: '0.75rem',
+                              height: 22,
+                              '& .MuiChip-label': { px: 1 },
+                            }}
+                          />
+                          <Typography variant="caption" color="#64748b" fontWeight={500}>
+                            vs last month
                           </Typography>
-                          <Typography variant="h4" fontWeight={800} color="#f8fafc" sx={{ letterSpacing: '-0.02em' }}>
-                            {stat.value}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: '#0f172a', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem' }}>
-                          {stat.icon}
-                        </Box>
-                      </Stack>
-                      <Typography variant="caption" color="#22c55e" sx={{ mt: 1.5, display: 'block', fontWeight: 600 }}>
-                        ↑ {stat.trend}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )
+              })}
             </Grid>
 
             {children}
