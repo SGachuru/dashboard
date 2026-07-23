@@ -57,10 +57,12 @@ const defaultStats: MetricItem[] = [
 
 const defaultMenuItems = [
   { label: 'Dispatch', href: '/service-manager-dashboard', icon: '🧭' },
-  { label: 'Coverage', href: '/service-manager-dashboard', icon: '🗺️' },
-  { label: 'Technicians', href: '/service-manager-dashboard', icon: '👷' },
-  { label: 'Reports', href: '/service-manager-dashboard', icon: '📈' },
-  { label: 'Admin', href: '/service-manager-dashboard', icon: '⚙️' },
+  { label: 'Map', href: '/service-manager-dashboard/map', icon: '🗺️' },
+  { label: 'Technicians', href: '/service-manager-dashboard/account', icon: '👷' },
+  { label: 'Jobs', href: '/service-manager-dashboard/jobs', icon: '📋' },
+  { label: 'Customers', href: '/service-manager-dashboard/customers', icon: '👤' },
+  { label: 'Reports', href: '/service-manager-dashboard/reports', icon: '📈' },
+  { label: 'Billing', href: '/service-manager-dashboard/billing', icon: '💳' },
 ]
 
 export default function ServiceManagerShell({

@@ -14,7 +14,7 @@ import {
   Typography
 } from '@mui/material'
 import type { NextPage } from 'next'
-import ServiceManagerShell from '../components/ServiceManagerShell'
+import ServiceManagerShell from '../../components/ServiceManagerShell'
 
 interface Dispatch {
   id: string
