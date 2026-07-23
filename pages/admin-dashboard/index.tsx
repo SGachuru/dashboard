@@ -20,7 +20,7 @@ import {
 } from '@mui/material'
 import type { NextPage } from 'next'
 import { useState } from 'react'
-import AdminDashboardShell from '../components/AdminDashboardShell'
+import AdminDashboardShell from '../../components/AdminDashboardShell'
 
 interface AdminTask {
   id: string
